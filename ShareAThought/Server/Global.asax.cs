@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Config;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,7 @@ namespace Server
     {
         void Application_Start(object sender, EventArgs e)
         {
+            DataConfig.Initialize();
             // Code that runs on application startup
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
