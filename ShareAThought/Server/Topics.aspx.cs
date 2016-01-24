@@ -20,7 +20,7 @@ namespace Server
 
             var articles = this.dbContext.Topics.AsQueryable();
             articles.OrderBy("CreatedOn Descending");
-            
+
             return articles;
         }
 

@@ -17,12 +17,12 @@ namespace Server.Models
     public class ApplicationUser : IdentityUser
     {
 
-        private ICollection<Thread> threads;
+        private ICollection<Topic> topics;
         private ICollection<Comment> comments;
 
         public ApplicationUser()
         {
-            this.threads = new HashSet<Thread>();
+            this.topics = new HashSet<Topic>();
             this.comments = new HashSet<Comment>();
         }
 
@@ -39,16 +39,16 @@ namespace Server.Models
             }
         }
 
-        public virtual ICollection<Thread> Threads
+        public virtual ICollection<Topic> Threads
         {
             get
             {
-                return this.threads;
+                return this.topics;
             }
 
             set
             {
-                this.threads = value;
+                this.topics = value;
             }
         }
 
