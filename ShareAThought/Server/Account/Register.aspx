@@ -11,11 +11,39 @@
         <hr />
         <asp:ValidationSummary runat="server" CssClass="text-danger" />
         <div class="form-group">
+            <asp:Label runat="server" AssociatedControlID="Username" CssClass="col-md-2 control-label">Username</asp:Label>
+            <div class="col-md-10">
+                <asp:TextBox runat="server" ID="Username" CssClass="form-control" TextMode="SingleLine" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="Username"
+                    CssClass="text-danger" ErrorMessage="The username field is required." />
+            </div>
+        </div>
+        <div class="form-group">
             <asp:Label runat="server" AssociatedControlID="Email" CssClass="col-md-2 control-label">Email</asp:Label>
             <div class="col-md-10">
                 <asp:TextBox runat="server" ID="Email" CssClass="form-control" TextMode="Email" />
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="Email"
                     CssClass="text-danger" ErrorMessage="The email field is required." />
+            </div>
+        </div>
+        <div class="form-group">
+            <asp:Label runat="server" AssociatedControlID="Gender" CssClass="col-md-2 control-label">Gender</asp:Label>
+            <div class="col-md-10">
+                <asp:DropDownList ID="Gender"  CssClass="form-control"  runat="server">
+                    <asp:ListItem>Male</asp:ListItem>
+                    <asp:ListItem>Female</asp:ListItem>
+                </asp:DropDownList>
+                
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="Gender"
+                    CssClass="text-danger" ErrorMessage="The email field is required." />
+            </div>
+        </div>
+        <div class="form-group">
+            <asp:Label runat="server" AssociatedControlID="Age" CssClass="col-md-2 control-label">Age</asp:Label>
+            <div class="col-md-10">
+                <asp:TextBox runat="server" ID="Age" CssClass="form-control" TextMode="Number" />
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="Age"
+                    CssClass="text-danger" ErrorMessage="The age field is required." />
             </div>
         </div>
         <div class="form-group">

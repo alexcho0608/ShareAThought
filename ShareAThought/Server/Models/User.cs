@@ -21,9 +21,7 @@
 //            this.ratings = new HashSet<Rating>();
         }
 
-        [MaxLength(ValidationConstants.UsernameMaxLength)]
-        public string ProvidedUsername { get; set; }
-
+        
         public Role Role { get; set; }
 
         [Required]

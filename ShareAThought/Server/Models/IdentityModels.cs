@@ -7,12 +7,51 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Server.Models;
+using System.ComponentModel.DataAnnotations;
+using Server.Common;
+using System.Collections.Generic;
 
 namespace Server.Models
 {
     // You can add User data for the user by adding more properties to your User class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
+
+        private ICollection<Thread> threads;
+        private ICollection<Comment> comments;
+
+        public ApplicationUser()
+        {
+            this.threads = new HashSet<Thread>();
+            this.comments = new HashSet<Comment>();
+        }
+
+        public virtual ICollection<Comment> Comments
+        {
+            get
+            {
+                return this.comments;
+            }
+
+            set
+            {
+                this.comments = value;
+            }
+        }
+
+        public virtual ICollection<Thread> Threads
+        {
+            get
+            {
+                return this.threads;
+            }
+
+            set
+            {
+                this.threads = value;
+            }
+        }
+
         public ClaimsIdentity GenerateUserIdentity(ApplicationUserManager manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -25,6 +64,16 @@ namespace Server.Models
         {
             return Task.FromResult(GenerateUserIdentity(manager));
         }
+
+
+        public Role Role { get; set; }
+
+        [Required]
+        [Range(1, 200)]
+        public int Age { get; set; }
+
+        [Required]
+        public string Gender { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
