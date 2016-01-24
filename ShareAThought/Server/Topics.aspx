@@ -20,7 +20,7 @@
                 <h3><%#: Item.Title %></h3>
                 <p>Category: <%#: Item.CategoryType %></p>
                 <p>
-                    <%#: Item.Author %>
+                    <%#: Item.Author.UserName %>
                 </p>
                 <p><%#: Item.CreatedOn %></p>
             </div>
