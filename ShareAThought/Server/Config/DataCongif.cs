@@ -1,8 +1,8 @@
 ﻿namespace Server.Config
 {
     using System.Data.Entity;
-    using Forum.Data;
-    using Forum.Data.Migrations;
+    using Models;
+    using Migrations;
 
     public class DataConfig
     {
