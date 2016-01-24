@@ -14,7 +14,7 @@
 
         public virtual IDbSet<Comment> Comments { get; set; }
 
-        public virtual IDbSet<Thread> Threads { get; set; }
+        public virtual IDbSet<Topic> Topics { get; set; }
 
 //        public virtual IDbSet<Rating> Ratings { get; set; }
 

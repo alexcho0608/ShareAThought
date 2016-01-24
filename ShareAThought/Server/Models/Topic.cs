@@ -5,11 +5,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class Thread
+    public class Topic
     {
         private ICollection<Comment> comments;
 
-        public Thread()
+        public Topic()
         {
             this.CreatedOn = DateTime.Now;
             this.comments = new HashSet<Comment>();
@@ -33,7 +33,6 @@
 
         public Category CategoryType { get; set; }
 
-        [Required]
         public string UserId { get; set; }
 
         public virtual User Author { get; set; }

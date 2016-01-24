@@ -11,12 +11,12 @@
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class User : IdentityUser
     {
-        private ICollection<Thread> threads;
+        private ICollection<Topic> topics;
         private ICollection<Comment> comments;
 
         public User()
         {
-            this.threads = new HashSet<Thread>();
+            this.topics = new HashSet<Topic>();
             this.comments = new HashSet<Comment>();
 //            this.ratings = new HashSet<Rating>();
         }
@@ -57,16 +57,16 @@
             }
         }
 
-        public virtual ICollection<Thread> Threads
+        public virtual ICollection<Topic> Topics
         {
             get
             {
-                return this.threads;
+                return this.topics;
             }
 
             set
             {
-                this.threads = value;
+                this.topics = value;
             }
         }
 
