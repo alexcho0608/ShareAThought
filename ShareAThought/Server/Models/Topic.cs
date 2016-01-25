@@ -33,6 +33,7 @@
 
         public Category CategoryType { get; set; }
 
+        [Required]
         public string UserId { get; set; }
 
         public virtual User Author { get; set; }

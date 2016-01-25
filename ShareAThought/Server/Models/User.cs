@@ -18,31 +18,31 @@
         {
             this.topics = new HashSet<Topic>();
             this.comments = new HashSet<Comment>();
-//            this.ratings = new HashSet<Rating>();
+            //this.ratings = new HashSet<Rating>();
         }
 
-        
+
         public Role Role { get; set; }
 
         [Required]
-        [Range(1,200)]
+        [Range(1, 200)]
         public int Age { get; set; }
 
         [Required]
         public string Gender { get; set; }
 
- /*       public virtual ICollection<Rating> Ratings
-        {
-            get
-            {
-                return this.ratings;
-            }
+        /*       public virtual ICollection<Rating> Ratings
+               {
+                   get
+                   {
+                       return this.ratings;
+                   }
 
-            set
-            {
-                this.ratings = value;
-            }
-        }*/
+                   set
+                   {
+                       this.ratings = value;
+                   }
+               }*/
 
         public virtual ICollection<Comment> Comments
         {

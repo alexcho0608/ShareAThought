@@ -2,8 +2,13 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2><%: Title %>.</h2>
-    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem" InsertItemPosition="LastItem">
+    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem" InsertItemPosition="LastItem" OnSorting="ListViewTopics_Sorting">
         <LayoutTemplate>
+            <div class="row">
+                <asp:LinkButton runat="server" ID="ButtonSortByTitle" CssClass="col-md-2 btn btn-default" Text="Sort by Title" CommandArgument="Title" CommandName="Sort" />
+                <asp:LinkButton runat="server" ID="ButtonSortByDate" CssClass="col-md-2 btn btn-default" Text="Sort by Date" CommandArgument="CreatedOn" CommandName="Sort" />
+                <asp:LinkButton runat="server" ID="ButtonSortByCategory" CssClass="col-md-2 btn btn-default" Text="Sort by Category" CommandArgument="CategoryType" CommandName="Sort" />
+            </div>
             <div runat="server" id="itemPlaceHolder"></div>
             <div class="row">
                 <asp:DataPager runat="server" ID="DataPagerTopics" PagedControlID="ListViewTopics" PageSize="5">

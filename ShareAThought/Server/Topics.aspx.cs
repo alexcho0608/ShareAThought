@@ -5,21 +5,85 @@ using System.Linq.Dynamic;
 using System.Web.ModelBinding;
 using Server.Models;
 using Microsoft.AspNet.Identity;
+using System.Web.UI.WebControls;
 
 namespace Server
 {
     public partial class Topics : BasePage
     {
+        private bool changeDirection = false;
+
+        public SortDirection SortDirection
+        {
+            get
+            {
+                SortDirection direction = SortDirection.Ascending;
+                if (ViewState["sortdirection"] != null)
+                {
+                    if ((SortDirection)ViewState["sortdirection"] == SortDirection.Descending &&
+                        !this.changeDirection ||
+                        (SortDirection)ViewState["sortdirection"] == SortDirection.Ascending &&
+                        this.changeDirection)
+                    {
+                        direction = SortDirection.Descending;
+                    }
+                }
+
+                ViewState["sortdirection"] = direction;
+                return direction;
+            }
+            set
+            {
+                ViewState["sortdirection"] = value;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
 
         }
 
+        protected void ListViewTopics_Sorting(object sender, ListViewSortEventArgs e)
+        {
+            e.Cancel = true;
+            if (ViewState["OrderBy"] != null &&
+                (string)ViewState["OrderBy"] == e.SortExpression)
+            {
+                this.changeDirection = true;
+            }
+            else
+            {
+                this.SortDirection = SortDirection.Ascending;
+            }
+
+            ViewState["OrderBy"] = e.SortExpression;
+            this.ListViewTopics.DataBind();
+        }
+
         public IQueryable<Server.Models.Topic> ListViewTopics_GetData([ViewState("OrderBy")]String OrderBy = null)
         {
-
             var articles = this.dbContext.Topics.AsQueryable();
-            articles.OrderBy("CreatedOn Descending");
+            if (OrderBy != null)
+            {
+                switch (this.SortDirection)
+                {
+                    case SortDirection.Ascending:
+                        articles = articles.OrderBy(OrderBy);
+                        break;
+                    case SortDirection.Descending:
+                        articles = articles.OrderBy(OrderBy + " Descending");
+                        break;
+                    default:
+                        articles = articles.OrderBy(OrderBy + " Descending");
+                        break;
+                }
+                return articles;
+            }
+            else
+            {
+                articles.OrderBy("CreatedOn Descending");
+            }
+
 
             return articles;
         }
