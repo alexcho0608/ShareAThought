@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Owin;
 using Server.Models;
+using System.IO;
 
 namespace Server.Account
 {
@@ -33,6 +34,17 @@ namespace Server.Account
 
         public int LoginsCount { get; set; }
 
+        protected User FoundUser { get; set; }
+
+        private ForumDbContext db;
+
+        protected void Page_Init()
+        {
+            db = new ForumDbContext();
+            var id = Context.User.Identity.GetUserId();
+            FoundUser = db.Users.Find(id);
+        }
+
         protected void Page_Load()
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
@@ -48,38 +60,79 @@ namespace Server.Account
 
             var authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
 
-            if (!IsPostBack)
+            this.Username.Text = FoundUser.UserName;
+            if (IsPostBack)
             {
-                // Determine the sections to render
-                if (HasPassword(manager))
-                {
-                    ChangePassword.Visible = true;
-                }
-                else
-                {
-                    CreatePassword.Visible = true;
-                    ChangePassword.Visible = false;
-                }
-
-                // Render success message
-                var message = Request.QueryString["m"];
-                if (message != null)
-                {
-                    // Strip the query string from action
-                    Form.Action = ResolveUrl("~/Account/Manage");
-
-                    SuccessMessage =
-                        message == "ChangePwdSuccess" ? "Your password has been changed."
-                        : message == "SetPwdSuccess" ? "Your password has been set."
-                        : message == "RemoveLoginSuccess" ? "The account was removed."
-                        : message == "AddPhoneNumberSuccess" ? "Phone number has been added"
-                        : message == "RemovePhoneNumberSuccess" ? "Phone number was removed"
-                        : String.Empty;
-                    successMessage.Visible = !String.IsNullOrEmpty(SuccessMessage);
-                }
+                FoundUser.Email = this.Email.Text;
             }
+
+            this.Email.Text = FoundUser.Email;
+            //    // Determine the sections to render
+            //    if (HasPassword(manager))
+            //    {
+            //        ChangePassword.Visible = true;
+            //    }
+            //    else
+            //    {
+            //        CreatePassword.Visible = true;
+            //        ChangePassword.Visible = false;
+            //    }
+
+            //    // Render success message
+            //    var message = Request.QueryString["m"];
+            //    if (message != null)
+            //    {
+            //        // Strip the query string from action
+            //        Form.Action = ResolveUrl("~/Account/Manage");
+
+            //        SuccessMessage =
+            //            message == "ChangePwdSuccess" ? "Your password has been changed."
+            //            : message == "SetPwdSuccess" ? "Your password has been set."
+            //            : message == "RemoveLoginSuccess" ? "The account was removed."
+            //            : message == "AddPhoneNumberSuccess" ? "Phone number has been added"
+            //            : message == "RemovePhoneNumberSuccess" ? "Phone number was removed"
+            //            : String.Empty;
+            //        successMessage.Visible = !String.IsNullOrEmpty(SuccessMessage);
+            //    }
+            //}
         }
 
+        protected void Edit(object send, EventArgs e)
+        {
+            if (FileUploadControl.HasFile && FileUploadControl.PostedFile.ContentType.Contains("image"))
+            {
+                string filename = FileUploadControl.FileName;
+                filename = "avatar." + filename.Split('.').LastOrDefault();
+                string path = Server.MapPath("~/Images/") + FoundUser.UserName + "/";
+                DirectoryInfo dInfo = new DirectoryInfo(path);
+                foreach(FileInfo f in dInfo.GetFiles())
+                {
+                    f.Delete();
+                }
+
+                FileUploadControl.SaveAs(path + filename);
+            }
+
+            db.SaveChanges();
+
+            string code = IdentityHelper.GetCodeFromRequest(Request);
+            if (this.Password.Text != "" && code != null)
+            {
+                var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+
+                var result = manager.ResetPassword(FoundUser.Id, code, Password.Text);
+                if (!result.Succeeded)
+                {
+                    Message.Text = "Success!";
+                    return;
+                }
+
+                ErrorMessage.Text = result.Errors.FirstOrDefault();
+                return;
+            }
+            Message.Text = "Success!";
+            this.Response.Redirect("~/Account/Manage");
+        }
 
         private void AddErrors(IdentityResult result)
         {

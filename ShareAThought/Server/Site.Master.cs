@@ -7,6 +7,8 @@ using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
+using System.IO;
+using System.Reflection;
 
 namespace Server
 {
@@ -15,6 +17,9 @@ namespace Server
         private const string AntiXsrfTokenKey = "__AntiXsrfToken";
         private const string AntiXsrfUserNameKey = "__AntiXsrfUserName";
         private string _antiXsrfTokenValue;
+
+        protected const string defaultImagePath = "Images/default.gif";
+        protected const string imagePath = "Images/{0}";
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -48,6 +53,10 @@ namespace Server
             Page.PreLoad += master_Page_PreLoad;
         }
 
+        protected void Manage(object sender,EventArgs e)
+        {
+            Response.Redirect("~/Account/Manage");
+        }
         protected void master_Page_PreLoad(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -69,11 +78,31 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            var username = Context.User.Identity.GetUserName();
+            if (username != "")
+            {
+                var control = (ImageButton)this.LoginView1.FindControl("Avatar");
+                string path = Server.MapPath("~/Images/") + username + "\\";
+                DirectoryInfo dInfo = new DirectoryInfo(path);
+                if (dInfo.GetFiles().Length != 0)
+                {
+                    var fullFilename = Directory
+                        .GetFiles(path, "*", SearchOption.AllDirectories)[0];
+                    string[] splits = fullFilename.Split('\\');
+                    var filename = splits[splits.Length - 1];
+                        
+                    control.ImageUrl = String.Format(imagePath,username) + "/" + filename;
+                }
+                else
+                {
+                    control.ImageUrl = defaultImagePath;
+                }
+            }
         }
 
         protected void Unnamed_LoggingOut(object sender, LoginCancelEventArgs e)
         {
+            
             Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
         }
     }

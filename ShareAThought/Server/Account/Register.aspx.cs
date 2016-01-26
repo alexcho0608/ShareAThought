@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Owin;
 using Server.Models;
+using System.IO;
 
 namespace Server.Account
 {
@@ -19,6 +20,8 @@ namespace Server.Account
             IdentityResult result = manager.Create(user, Password.Text);
             if (result.Succeeded)
             {
+              
+                Directory.CreateDirectory(Server.MapPath("~/Images/" + Username.Text));
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 //string code = manager.GenerateEmailConfirmationToken(user.Id);
                 //string callbackUrl = IdentityHelper.GetUserConfirmationRedirectUrl(code, user.Id, Request);
