@@ -66,7 +66,7 @@
             return like.Value;
         }
 
-        public IQueryable<Comment> ListViewComments_GetData([QueryString("id")]int? id)
+        public IQueryable<Server.Models.Comment> ListViewComments_GetData([QueryString("id")]int? id)
         {
             var comments = this.dbContext.Comments.AsQueryable();
             comments = comments.Where(c => c.TopicId == id).OrderBy("CreatedOn Descending");
@@ -75,7 +75,7 @@
 
         public void ListViewComments_InsertItem()
         {
-            var comment = new Comment();
+            var comment = new Server.Models.Comment();
             comment.CreatedOn = DateTime.Now;
             comment.UserId = User.Identity.GetUserId();
             comment.TopicId = int.Parse(Request.QueryString["id"]);
@@ -85,6 +85,7 @@
                 this.dbContext.Comments.Add(comment);
                 this.dbContext.SaveChanges();
             }
+            Response.Redirect("~/ViewTopic?id=" + Request.QueryString["id"]);
         }
     }
 }
