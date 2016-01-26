@@ -23,7 +23,7 @@
         <ItemTemplate>
             <div class="row">
                 <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" />
-                    <asp:LinkButton runat="server" ID="ButtonEditArticle" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
+                    <asp:LinkButton runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
                 </h3>
                 <p><%#: Item.CategoryType %></p>
                 <p>

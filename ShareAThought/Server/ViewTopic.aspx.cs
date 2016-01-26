@@ -88,5 +88,22 @@
 
             Response.Redirect("~/ViewTopic?id=" + Request.QueryString["id"]);
         }
+
+        public void ListViewComments_UpdateItem(int id)
+        {
+            Server.Models.Comment item = this.dbContext.Comments.Find(id);
+            if (item == null)
+            {
+                // The item wasn't found
+                ModelState.AddModelError("", String.Format("Item with id {0} was not found", id));
+                return;
+            }
+
+            TryUpdateModel(item);
+            if (ModelState.IsValid)
+            {
+                this.dbContext.SaveChanges();
+            }
+        }
     }
 }
