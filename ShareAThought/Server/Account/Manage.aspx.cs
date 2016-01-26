@@ -115,13 +115,12 @@ namespace Server.Account
 
             db.SaveChanges();
 
-            string code = IdentityHelper.GetCodeFromRequest(Request);
-            if (this.Password.Text != "" && code != null)
+            if (this.Password.Text != "")
             {
                 var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
 
-                var result = manager.ResetPassword(FoundUser.Id, code, Password.Text);
-                if (!result.Succeeded)
+                var result = manager.ChangePassword(FoundUser.Id, Password.Text, ConfirmPassword.Text);
+                if (result.Succeeded)
                 {
                     Message.Text = "Success!";
                     return;
