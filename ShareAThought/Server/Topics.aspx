@@ -22,8 +22,8 @@
         </LayoutTemplate>
         <ItemTemplate>
             <div class="row">
-                <h3><%#: Item.Title %></h3>
-                <p>Category: <%#: Item.CategoryType %></p>
+                <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" /></h3>
+                <p><%#: Item.CategoryType %></p>
                 <p>
                     <%#: Item.Author.UserName %>
                 </p>

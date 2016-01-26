@@ -158,6 +158,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Controls\LikeControl.ascx" />
     <Content Include="Topics.aspx" />
     <Content Include="Account\AddPhoneNumber.aspx" />
     <Content Include="Account\Confirm.aspx" />
@@ -218,6 +219,7 @@
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
     <Content Include="ViewSwitcher.ascx" />
+    <Content Include="ViewTopic.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -343,6 +345,12 @@
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Controls\LikeControl.ascx.cs">
+      <DependentUpon>LikeControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\LikeControl.ascx.designer.cs">
+      <DependentUpon>LikeControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Models\Like.cs" />
     <Compile Include="Topics.aspx.cs">
       <DependentUpon>Topics.aspx</DependentUpon>
@@ -406,6 +414,13 @@
     </Compile>
     <Compile Include="ViewSwitcher.ascx.designer.cs">
       <DependentUpon>ViewSwitcher.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewTopic.aspx.cs">
+      <DependentUpon>ViewTopic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewTopic.aspx.designer.cs">
+      <DependentUpon>ViewTopic.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
