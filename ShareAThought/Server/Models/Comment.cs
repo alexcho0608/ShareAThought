@@ -13,11 +13,13 @@
 
         public int Id { get; set; }
 
+        [Required]
         public string UserId { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual User Author { get; set; }
 
-        public int ThreadId { get; set; }
+        [Required]
+        public int TopicId { get; set; }
 
         public virtual Topic Topic { get; set; }
 
@@ -27,7 +29,5 @@
         public string Content { get; set; }
 
         public DateTime CreatedOn { get; set; }
-
-
     }
 }

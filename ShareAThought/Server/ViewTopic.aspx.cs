@@ -1,7 +1,9 @@
 ﻿namespace Server
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Linq.Dynamic;
     using System.Web.ModelBinding;
     using Microsoft.AspNet.Identity;
     using Server.Controls;
@@ -11,7 +13,7 @@
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         public Topic FormViewTopic_GetItem([QueryString("id")]int? id)
@@ -62,6 +64,27 @@
             }
 
             return like.Value;
+        }
+
+        public IQueryable<Comment> ListViewComments_GetData([QueryString("id")]int? id)
+        {
+            var comments = this.dbContext.Comments.AsQueryable();
+            comments = comments.Where(c => c.TopicId == id).OrderBy("CreatedOn Descending");
+            return comments;
+        }
+
+        public void ListViewComments_InsertItem()
+        {
+            var comment = new Comment();
+            comment.CreatedOn = DateTime.Now;
+            comment.UserId = User.Identity.GetUserId();
+            comment.TopicId = int.Parse(Request.QueryString["id"]);
+            TryUpdateModel(comment);
+            if (ModelState.IsValid)
+            {
+                this.dbContext.Comments.Add(comment);
+                this.dbContext.SaveChanges();
+            }
         }
     }
 }
