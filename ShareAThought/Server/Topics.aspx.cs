@@ -106,5 +106,22 @@ namespace Server
                 this.dbContext.SaveChanges();
             }
         }
+
+        public void ListViewTopics_UpdateItem(int id)
+        {
+            Server.Models.Topic item = this.dbContext.Topics.Find(id);
+            if (item == null)
+            {
+                // The item wasn't found
+                ModelState.AddModelError("", String.Format("Item with id {0} was not found", id));
+                return;
+            }
+
+            TryUpdateModel(item);
+            if (ModelState.IsValid)
+            {
+                this.dbContext.SaveChanges();
+            }
+        }
     }
 }

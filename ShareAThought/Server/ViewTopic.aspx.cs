@@ -69,7 +69,7 @@
         public IQueryable<Server.Models.Comment> ListViewComments_GetData([QueryString("id")]int? id)
         {
             var comments = this.dbContext.Comments.AsQueryable();
-            comments = comments.Where(c => c.TopicId == id).OrderBy("CreatedOn Descending");
+            comments = comments.Where(c => c.TopicId == id).OrderBy("CreatedOn");
             return comments;
         }
 
@@ -85,6 +85,7 @@
                 this.dbContext.Comments.Add(comment);
                 this.dbContext.SaveChanges();
             }
+
             Response.Redirect("~/ViewTopic?id=" + Request.QueryString["id"]);
         }
     }

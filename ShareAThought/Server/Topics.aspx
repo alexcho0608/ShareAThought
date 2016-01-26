@@ -2,7 +2,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <h2><%: Title %>.</h2>
-    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem" InsertItemPosition="LastItem" OnSorting="ListViewTopics_Sorting">
+    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem" InsertItemPosition="LastItem" UpdateMethod="ListViewTopics_UpdateItem" OnSorting="ListViewTopics_Sorting">
         <LayoutTemplate>
             <div class="row">
                 <asp:LinkButton runat="server" ID="ButtonSortByTitle" CssClass="col-md-2 btn btn-default" Text="Sort by Title" CommandArgument="Title" CommandName="Sort" />
@@ -22,7 +22,9 @@
         </LayoutTemplate>
         <ItemTemplate>
             <div class="row">
-                <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" /></h3>
+                <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" />
+                    <asp:LinkButton runat="server" ID="ButtonEditArticle" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
+                </h3>
                 <p><%#: Item.CategoryType %></p>
                 <p>
                     <%#: Item.Author.UserName %>
@@ -30,6 +32,26 @@
                 <p><%#: Item.CreatedOn %></p>
             </div>
         </ItemTemplate>
+        <EditItemTemplate>
+            <div class="row">
+                <h3>
+                    <asp:TextBox runat="server" ID="TextBoxEditTitle" Text="<%# BindItem.Title %>" />
+                    <asp:RequiredFieldValidator ErrorMessage="Title is required" ValidationGroup="EditTopic" ControlToValidate="TextBoxEditTitle" ForeColor="Red" runat="server" />
+                    <asp:LinkButton runat="server" ID="ButtonEditTopic" CssClass="btn btn-success" Text="Save" CommandName="Update" CausesValidation="true" ValidationGroup="EditTopic" />
+                    <asp:LinkButton runat="server" ID="ButtonDeleteTopic" CssClass="btn btn-danger" Text="Cancel" CommandName="Cancel" CausesValidation="false" />
+                </h3>
+                <p>
+                    <asp:DropDownList runat="server" ID="DropDownListCategories"
+                        SelectedValue="<%#: BindItem.CategoryType %>" SelectMethod="DropDownListCategories_GetData" />
+                <p>
+                    <asp:TextBox runat="server" ID="TextBoxEditContent" Text="<%# BindItem.Content %>" TextMode="MultiLine" Rows="6" Width="100%" /><asp:RequiredFieldValidator ErrorMessage="Content is required" ValidationGroup="EditTitle" ControlToValidate="TextBoxEditContent" ForeColor="Red" runat="server" />
+                </p>
+                <div>
+                    <i>by <%#: this.User.Identity.GetUserName() %></i>
+                    <i>created on: <%# Item.CreatedOn %></i>
+                </div>
+            </div>
+        </EditItemTemplate>
         <InsertItemTemplate>
             <a href="#" id="buttonShowInsertPanel" class="btn btn-info pull-right" onclick="(function (ev) { $('#panelInsertTopic').show(); $('#buttonShowInsertPanel').hide(); }())">Insert new Topic</a>
             <div id="panelInsertTopic" style="display: none;">
