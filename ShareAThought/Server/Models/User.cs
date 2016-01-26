@@ -13,12 +13,13 @@
     {
         private ICollection<Topic> topics;
         private ICollection<Comment> comments;
+        private ICollection<Like> likes;
 
         public User()
         {
             this.topics = new HashSet<Topic>();
             this.comments = new HashSet<Comment>();
-            //this.ratings = new HashSet<Rating>();
+            this.likes = new HashSet<Like>();
         }
 
 
@@ -31,18 +32,17 @@
         [Required]
         public string Gender { get; set; }
 
-        /*       public virtual ICollection<Rating> Ratings
-               {
-                   get
-                   {
-                       return this.ratings;
-                   }
-
-                   set
-                   {
-                       this.ratings = value;
-                   }
-               }*/
+        public virtual ICollection<Like> Likes
+        {
+            get
+            {
+                return this.likes;
+            }
+            set
+            {
+                this.likes = value;
+            }
+        }
 
         public virtual ICollection<Comment> Comments
         {

@@ -13,6 +13,7 @@
         {
             this.CreatedOn = DateTime.Now;
             this.comments = new HashSet<Comment>();
+            this.Likes = new HashSet<Like>();
         }
 
         public int Id { get; set; }
@@ -49,5 +50,7 @@
                 this.comments = value;
             }
         }
+
+        public virtual ICollection<Like> Likes { get; set; }
     }
 }

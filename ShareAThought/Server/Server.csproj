@@ -343,6 +343,7 @@
     <Compile Include="BasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Models\Like.cs" />
     <Compile Include="Topics.aspx.cs">
       <DependentUpon>Topics.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
