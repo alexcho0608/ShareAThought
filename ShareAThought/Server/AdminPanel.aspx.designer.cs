@@ -7,45 +7,45 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Server.Controls {
+namespace Server {
     
     
-    public partial class LikeControl {
+    public partial class AdminPanel {
         
         /// <summary>
-        /// ControlWrapper control.
+        /// UserSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel ControlWrapper;
+        protected global::System.Web.UI.WebControls.TextBox UserSearch;
         
         /// <summary>
-        /// LabelValue control.
+        /// ListUsersId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelValue;
+        protected global::System.Web.UI.WebControls.ListBox ListUsersId;
         
         /// <summary>
-        /// ButtonLike control.
+        /// DeleteUserButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton ButtonLike;
+        protected global::System.Web.UI.WebControls.LinkButton DeleteUserButton;
         
         /// <summary>
-        /// ButtonDislike control.
+        /// LinkButton1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton ButtonDislike;
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
     }
 }

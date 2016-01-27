@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using System.IO;
 using System.Reflection;
+using Server.Common;
 
 namespace Server
 {
@@ -82,7 +83,7 @@ namespace Server
             if (username != "")
             {
                 var control = (ImageButton)this.LoginView1.FindControl("Avatar");
-                string path = Server.MapPath("~/Images/") + username + "\\";
+                string path = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + username + "\\";
                 DirectoryInfo dInfo = new DirectoryInfo(path);
                 if (dInfo.GetFiles().Length != 0)
                 {

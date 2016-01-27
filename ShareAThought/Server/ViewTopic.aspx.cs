@@ -8,17 +8,81 @@
     using Microsoft.AspNet.Identity;
     using Server.Controls;
     using Server.Models;
+    using System.Web.UI.WebControls;
+    using System.Web.UI;
+    using System.IO;
+    using Common;
 
     public partial class ViewTopic : BasePage
     {
+
+        protected bool isAdmin;
+
+        protected Queue<bool> filter;
+
+        protected Queue<bool> secondFilter;
+
+        protected Dictionary<string, string> cache;
+
+
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            cache = new Dictionary<string, string>();
+            filter = new Queue<bool>();
+            var username = User.Identity.GetUserName();
+            if (username == "")
+            {
+                isAdmin = false;
+                return;
+            }
+
+            var user = this.dbContext.Users.First(u => u.UserName == username);
+            if (user.Role == Models.Role.Admin)
+            {
+                isAdmin = true;
+            }
+
+            else
+            {
+                isAdmin = false;
+            }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
-            
         }
 
+        protected void Page_SaveStateComplete(object sender,EventArgs e)
+        {
+            //if (filter.Count == 0) filter = new Queue<bool>(secondFilter);
+        }
         public Topic FormViewTopic_GetItem([QueryString("id")]int? id)
         {
             return this.dbContext.Topics.FirstOrDefault(a => a.Id == id); ;
+        }
+
+        protected string getPath(string username)
+        {
+            if (cache.ContainsKey(username))
+            {
+                return cache[username];
+            }
+
+            string path = Server.MapPath("~"+ServerPathConstants.ImageDirectory) + username + "\\";
+            DirectoryInfo dInfo = new DirectoryInfo(path);
+            if (dInfo.GetFiles().Length == 0)
+            {
+                cache.Add(username, ServerPathConstants.ImageDirectory+ ServerPathConstants.DefaultName);
+            }
+            else
+            {
+                var fullFilename = Directory
+                    .GetFiles(path, "*", SearchOption.AllDirectories)[0];
+                string[] splits = fullFilename.Split('\\');
+                var filename = splits[splits.Length - 1];
+                cache.Add(username,ServerPathConstants.ImageDirectory+username+"/"+filename);
+            }
+
+            return cache[username];
         }
 
         protected int GetLikes(Topic item)
@@ -52,6 +116,8 @@
             var control = sender as LikeControl;
             control.Value = article.Likes.Sum(l => l.Value);
             control.CurrentUserVote = e.LikeValue;
+            filter = secondFilter;
+            
         }
 
         protected int GetCurrentUserVote(Topic item)
@@ -104,6 +170,15 @@
             {
                 this.dbContext.SaveChanges();
             }
+        }
+
+        public void ListViewComments_ItemDataBound(object sender, ListViewItemEventArgs e)
+        {
+        }
+
+        protected void DeleteComment(object sender, EventArgs e)
+        {
+
         }
     }
 }
