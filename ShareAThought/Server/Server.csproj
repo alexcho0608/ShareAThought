@@ -160,6 +160,7 @@
   <ItemGroup>
     <Content Include="AdminPanel.aspx" />
     <Content Include="Controls\LikeControl.ascx" />
+    <Content Include="styles\topics.css" />
     <Content Include="styles\viewtopic.css" />
     <Content Include="Topics.aspx" />
     <Content Include="Account\AddPhoneNumber.aspx" />

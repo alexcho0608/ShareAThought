@@ -1,0 +1,26 @@
+﻿.searchPanel{
+    border: 1px solid black;
+    padding:1%;
+    width:80%;
+}
+.topicHeader{
+    background-color:darkred;
+    padding-left:2%;
+}
+.topicInfo{
+    padding-top:1%;
+    border:1px solid darkred;
+}
+.topicButtons{
+    padding-top:1%;
+    padding-left:90%;
+}
+body{
+    background-color:grey;
+}
+.body-content{
+    overflow:hidden;
+    margin:2%;
+    background-color:white;
+    padding-left:2%;
+}

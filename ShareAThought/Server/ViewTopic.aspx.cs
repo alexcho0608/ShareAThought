@@ -18,17 +18,12 @@
 
         protected bool isAdmin;
 
-        protected Queue<bool> filter;
-
-        protected Queue<bool> secondFilter;
-
         protected Dictionary<string, string> cache;
 
 
         protected void Page_Init(object sender, EventArgs e)
         {
             cache = new Dictionary<string, string>();
-            filter = new Queue<bool>();
             var username = User.Identity.GetUserName();
             if (username == "")
             {
@@ -51,10 +46,6 @@
         {
         }
 
-        protected void Page_SaveStateComplete(object sender,EventArgs e)
-        {
-            //if (filter.Count == 0) filter = new Queue<bool>(secondFilter);
-        }
         public Topic FormViewTopic_GetItem([QueryString("id")]int? id)
         {
             return this.dbContext.Topics.FirstOrDefault(a => a.Id == id); ;
@@ -116,7 +107,6 @@
             var control = sender as LikeControl;
             control.Value = article.Likes.Sum(l => l.Value);
             control.CurrentUserVote = e.LikeValue;
-            filter = secondFilter;
             
         }
 

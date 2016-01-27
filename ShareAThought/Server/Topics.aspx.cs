@@ -13,6 +13,7 @@ namespace Server
     {
         private bool changeDirection = false;
 
+        protected bool isAdmin;
         public SortDirection SortDirection
         {
             get
@@ -40,7 +41,23 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            var username = User.Identity.GetUserName();
+            if (username == "")
+            {
+                isAdmin = false;
+                return;
+            }
 
+            var user = this.dbContext.Users.First(u => u.UserName == username);
+            if (user.Role == Models.Role.Admin)
+            {
+                isAdmin = true;
+            }
+
+            else
+            {
+                isAdmin = false;
+            }
         }
 
         protected void ListViewTopics_Sorting(object sender, ListViewSortEventArgs e)
@@ -107,6 +124,18 @@ namespace Server
             }
         }
 
+        public void DeleteTopic(object sender,EventArgs e)
+        {
+            Server.Models.Topic item = this.dbContext.Topics.Find(1);
+            if (item == null)
+            {
+                // The item wasn't found
+                ModelState.AddModelError("", String.Format("Item with id {0} was not found", 1));
+                return;
+            }
+
+           
+        }
         public void ListViewTopics_UpdateItem(int id)
         {
             Server.Models.Topic item = this.dbContext.Topics.Find(id);

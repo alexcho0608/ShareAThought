@@ -1,10 +1,12 @@
 ﻿<%@ Page Title="Topics" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Topics.aspx.cs" Inherits="Server.Topics" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h2><%: Title %>.</h2>
+    <div class="topicsContainer">
+    <link rel="stylesheet" href="styles/topics.css" />
+     <h2><%: Title %>.</h2>
     <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem" InsertItemPosition="LastItem" UpdateMethod="ListViewTopics_UpdateItem" OnSorting="ListViewTopics_Sorting">
         <LayoutTemplate>
-            <div class="row">
+            <div class="row searchPanel" >
                 <asp:LinkButton runat="server" ID="ButtonSortByTitle" CssClass="col-md-2 btn btn-default" Text="Sort by Title" CommandArgument="Title" CommandName="Sort" />
                 <asp:LinkButton runat="server" ID="ButtonSortByDate" CssClass="col-md-2 btn btn-default" Text="Sort by Date" CommandArgument="CreatedOn" CommandName="Sort" />
                 <asp:LinkButton runat="server" ID="ButtonSortByCategory" CssClass="col-md-2 btn btn-default" Text="Sort by Category" CommandArgument="CategoryType" CommandName="Sort" />
@@ -21,16 +23,20 @@
             </div>
         </LayoutTemplate>
         <ItemTemplate>
-            <div class="row">
+            <div class="row topicHeader">
                 <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" />
-                    <asp:LinkButton runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
                 </h3>
-                <p><%#: Item.CategoryType %></p>
-                <p>
-                    <%#: Item.Author.UserName %>
-                </p>
-                <p><%#: Item.CreatedOn %></p>
+             </div>
+            <div class="row topicInfo"> 
+               <div class="col-sm-4"><p>Category: <%#: Item.CategoryType %></p></div>
+                <div class="col-sm-4"><p>Author: <%#: Item.Author.UserName %></p></div>
+                <div class="col-sm-4"><p>Created on: <%#: Item.CreatedOn %></p></div>
             </div>
+            <div class="row topicButtons">
+                <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
+                <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="DeleteTopic" CssClass="btn btn-danger " Text="Delete" OnClick="DeleteTopic" />
+            </div>
+            <hr />
         </ItemTemplate>
         <EditItemTemplate>
             <div class="row">
@@ -79,4 +85,5 @@
             </div>
         </InsertItemTemplate>
     </asp:ListView>
+   </div>
 </asp:Content>

@@ -21,7 +21,7 @@ namespace Server
 
         protected const string defaultImagePath = "Images/default.gif";
         protected const string imagePath = "Images/{0}";
-
+        protected bool isAdmin;
         protected void Page_Init(object sender, EventArgs e)
         {
             // The code below helps to protect against XSRF attacks
@@ -79,6 +79,7 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            isAdmin = false;
             var username = Context.User.Identity.GetUserName();
             if (username != "")
             {
