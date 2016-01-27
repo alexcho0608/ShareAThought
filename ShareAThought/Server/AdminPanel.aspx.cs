@@ -40,7 +40,7 @@
           
         }
 
-        protected void TextBox2_TextChanged(object sender, EventArgs e)
+        protected void Search(object sender, EventArgs e)
         {
             var text = this.UserSearch.Text;
             var users = this.dbContext.Users.AsQueryable()
@@ -49,26 +49,26 @@
                 .ToArray();
             if (users.Count() != 0)
             {
-                this.ListUsersId.DataSource = users;
-                this.ListUsersId.DataBind();
+                this.ListUsersControl.DataSource = users;
+                this.ListUsersControl.DataBind();
 
             }
             else
             {
-                this.ListUsersId.DataSource = new [] { new { Text = "Not found" } };
-                this.ListUsersId.DataBind();
+                this.ListUsersControl.DataSource = new [] { new { Text = "Not found" } };
+                this.ListUsersControl.DataBind();
             }
         }
         protected void PromoteUser(object sender, EventArgs e)
         {
-            var username = this.UserSearch.Text;
+            var username = this.ListUsersControl.SelectedValue;
             var user = this.dbContext.Users.FirstOrDefault(u => u.UserName == username);
             user.Role = Models.Role.Admin;
             this.dbContext.SaveChanges();
         }
         protected void DeleteUser(object sender, EventArgs e)
         {
-            var username = this.UserSearch.Text;
+            var username = this.ListUsersControl.SelectedValue;
             var user = this.dbContext.Users.FirstOrDefault(u => u.UserName == username);
             this.dbContext.Users.Remove(user);
             this.dbContext.SaveChanges();

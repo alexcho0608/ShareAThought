@@ -22,20 +22,16 @@
                 <div class="form-group">
                     <asp:Label runat="server" AssociatedControlID="Username" CssClass="col-md-2 control-label">Username</asp:Label>
                     <div class="col-md-10">
-                        <asp:TextBox DataTextField="Text" DataValueField="Url" runat="server" ID="Username" />
+                        <asp:TextBox DataTextField="Text" CssClass="form-control" DataValueField="Url" runat="server" ID="Username" />
                     </div>
                 </div>
                 <div class="form-group">
                     <asp:Label runat="server" AssociatedControlID="Email" CssClass="col-md-2 control-label">Email</asp:Label>
                     <div class="col-md-10">
-                        <asp:TextBox runat="server" ID="Email" CssClass="form-control" TextMode="Email" />
+                        <asp:TextBox runat="server" CssClass="form-control" ID="Email"  TextMode="Email" />
                         <asp:RequiredFieldValidator runat="server" ControlToValidate="Email"
                             CssClass="text-danger" ErrorMessage="The email field is required." />
                     </div>
-                </div>
-                <div class="form-group">
-                    <asp:Label runat="server" AssociatedControlID="FileUploadControl" CssClass="col-md-2 control-label"></asp:Label>
-                    <asp:FileUpload runat="server" ID="FileUploadControl" />
                 </div>
                 <div class="form-group">
                     <asp:Label runat="server" AssociatedControlID="Password" CssClass="col-md-2 control-label">Password</asp:Label>
@@ -50,11 +46,14 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <asp:Label runat="server" AssociatedControlID="FileUploadControl" CssClass="col-md-2 control-label"></asp:Label>
+                    <asp:FileUpload runat="server" ID="FileUploadControl" />
+                </div>
+                <div class="form-group">
                     <div class="col-md-10">
                         <asp:Button runat="server" ID="TextButton1" OnClick="Edit" Text="Edit" CssClass="form-control" />
                     </div>
                 </div>
-            
                 <%--
                         Phone Numbers can used as a second factor of verification in a two-factor authentication system.
                         See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>

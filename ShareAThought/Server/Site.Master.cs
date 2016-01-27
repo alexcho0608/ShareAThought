@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using System.IO;
 using System.Reflection;
 using Server.Common;
+using Server.Models;
 
 namespace Server
 {
@@ -79,7 +80,18 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Context.User.Identity.GetUserId() == null)
+            {
+                isAdmin = false;
+                return;
+            }
+            ForumDbContext db = new ForumDbContext();
+            Role role = db.Users.Find(Context.User.Identity.GetUserId()).Role;
             isAdmin = false;
+            if (role == Role.Admin)
+            {
+                isAdmin = true;
+            }
             var username = Context.User.Identity.GetUserName();
             if (username != "")
             {

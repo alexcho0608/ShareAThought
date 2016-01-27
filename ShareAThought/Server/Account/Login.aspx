@@ -4,7 +4,15 @@
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
     <h2><%: Title %>.</h2>
-
+    <style>
+        a{
+            color:white;
+        }
+        a:hover{
+            text-decoration:none;
+            color:white;
+        }
+    </style>
     <div class="row">
         <div class="col-md-8">
             <section id="loginForm">
@@ -56,7 +64,7 @@
             </section>
         </div>
 
-        <div class="col-md-4">
+        <div style="visibility:hidden"class="col-md-4">
             <section id="socialLoginForm">
                 <uc:OpenAuthProviders runat="server" ID="OpenAuthLogin" />
             </section>

@@ -131,7 +131,6 @@ namespace Server.Account
                 return;
             }
             Message.Text = "Success!";
-            this.Response.Redirect("~/Account/Manage");
         }
 
         private void AddErrors(IdentityResult result)

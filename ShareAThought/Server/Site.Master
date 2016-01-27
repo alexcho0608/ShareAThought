@@ -52,6 +52,7 @@
                     <ul class="nav navbar-nav">
                         <li><a runat="server" href="~/">Home</a></li>
                         <li><a runat="server" href="~/Topics">Topics</a></li>
+                        <li><a runat="server" href="~/Account/Manage">Manage</a></li>
                         <%if (isAdmin)
                             { %>
                             <li><a runat="server" href="~/AdminPanel">AdminPanel</a></li>

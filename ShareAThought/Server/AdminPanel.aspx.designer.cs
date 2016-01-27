@@ -22,13 +22,22 @@ namespace Server {
         protected global::System.Web.UI.WebControls.TextBox UserSearch;
         
         /// <summary>
-        /// ListUsersId control.
+        /// SearchButtonControl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListBox ListUsersId;
+        protected global::System.Web.UI.WebControls.Button SearchButtonControl;
+        
+        /// <summary>
+        /// ListUsersControl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ListBox ListUsersControl;
         
         /// <summary>
         /// DeleteUserButton control.

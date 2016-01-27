@@ -3,6 +3,16 @@
     padding:1%;
     width:80%;
 }
+.row .sort{
+    margin-left:2%;
+}
+.row .search{
+    margin-top:1%;
+    margin-left:2%;
+}
+a:hover{
+    text-decoration:none;
+}
 .topicHeader{
     background-color:darkred;
     padding-left:2%;

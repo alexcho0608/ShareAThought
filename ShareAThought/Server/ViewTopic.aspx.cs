@@ -58,11 +58,11 @@
                 return cache[username];
             }
 
-            string path = Server.MapPath("~"+ServerPathConstants.ImageDirectory) + username + "\\";
+            string path = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + username + "\\";
             DirectoryInfo dInfo = new DirectoryInfo(path);
             if (dInfo.GetFiles().Length == 0)
             {
-                cache.Add(username, ServerPathConstants.ImageDirectory+ ServerPathConstants.DefaultName);
+                cache.Add(username, ServerPathConstants.ImageDirectory + ServerPathConstants.DefaultName);
             }
             else
             {
@@ -70,7 +70,7 @@
                     .GetFiles(path, "*", SearchOption.AllDirectories)[0];
                 string[] splits = fullFilename.Split('\\');
                 var filename = splits[splits.Length - 1];
-                cache.Add(username,ServerPathConstants.ImageDirectory+username+"/"+filename);
+                cache.Add(username, ServerPathConstants.ImageDirectory + username + "/" + filename);
             }
 
             return cache[username];
@@ -107,7 +107,7 @@
             var control = sender as LikeControl;
             control.Value = article.Likes.Sum(l => l.Value);
             control.CurrentUserVote = e.LikeValue;
-            
+
         }
 
         protected int GetCurrentUserVote(Topic item)
@@ -166,9 +166,17 @@
         {
         }
 
-        protected void DeleteComment(object sender, EventArgs e)
+        protected void DeleteComment(object sender, ListViewDeleteEventArgs e)
         {
-
+            ListViewItem item = this.ListViewComments.Items[e.ItemIndex];
+            int id = Convert.ToInt32((item.FindControl("IDValue") as HiddenField).Value);
+            var comment = this.dbContext.Comments.Find(id);
+            if(comment != null)
+            {
+                dbContext.Comments.Remove(comment);
+                dbContext.SaveChanges();
+            }
+            Response.Redirect("~/ViewTopic?id=" + Request.QueryString["id"]);
         }
     }
 }

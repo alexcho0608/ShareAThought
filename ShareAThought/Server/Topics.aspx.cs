@@ -6,6 +6,7 @@ using System.Web.ModelBinding;
 using Server.Models;
 using Microsoft.AspNet.Identity;
 using System.Web.UI.WebControls;
+using Server.Common;
 
 namespace Server
 {
@@ -100,7 +101,23 @@ namespace Server
             {
                 articles.OrderBy("CreatedOn Descending");
             }
-
+            string searchWord = (this.ListViewTopics.FindControl("SearchWord") as TextBox).Text;
+            string searchBy = (this.ListViewTopics.FindControl("SearchBy") as DropDownList).SelectedValue;
+            if (searchWord != "")
+            {
+                switch (searchBy)
+                {
+                    case SearchPatternsConstats.Username:
+                        articles = articles.Where(a => a.Author.UserName.Contains(searchWord));
+                        break;
+                    case SearchPatternsConstats.TopicName:
+                        articles = articles.Where(a => a.Title.Contains(searchWord));
+                        break;
+                    default:
+                        articles = articles.Where(a => a.Content.Contains(searchWord));
+                        break;
+                }
+            }
 
             return articles;
         }
@@ -110,6 +127,10 @@ namespace Server
             return Enum.GetValues(typeof(Category)).OfType<Category>();
         }
 
+        public void GetTopics(object sender, EventArgs e)
+        {
+            
+        }
         public void ListViewTopics_InsertItem()
         {
             var item = new Server.Models.Topic();
@@ -124,17 +145,35 @@ namespace Server
             }
         }
 
-        public void DeleteTopic(object sender,EventArgs e)
+        public void ListViewTopics_Delete(object sender,ListViewDeleteEventArgs e)
         {
-            Server.Models.Topic item = this.dbContext.Topics.Find(1);
-            if (item == null)
+            ListViewItem item = this.ListViewTopics.Items[e.ItemIndex];
+            int id = Convert.ToInt32((item.FindControl("IDValue") as HiddenField).Value);
+            var topic = this.dbContext.Topics.Find(id);
+            if(topic != null)
             {
-                // The item wasn't found
-                ModelState.AddModelError("", String.Format("Item with id {0} was not found", 1));
-                return;
+                var comments = this.dbContext.Comments
+                     .Where(c => c.Topic.Id == topic.Id)
+                     .AsQueryable();
+                var likes = this.dbContext.Likes
+                     .Where(c => c.Topic.Id == topic.Id)
+                     .AsQueryable();
+                foreach (var c in comments)
+                {
+                    this.dbContext.Comments.Remove(c);
+                }
+
+                foreach(var l in likes)
+                {
+                    this.dbContext.Likes.Remove(l);
+                }
+
+                this.dbContext.Topics.Remove(topic);
+                this.dbContext.SaveChanges();
+
+                this.Response.Redirect("/Topics");
             }
 
-           
         }
         public void ListViewTopics_UpdateItem(int id)
         {

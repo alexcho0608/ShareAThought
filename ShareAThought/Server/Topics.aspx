@@ -4,13 +4,29 @@
     <div class="topicsContainer">
     <link rel="stylesheet" href="styles/topics.css" />
      <h2><%: Title %>.</h2>
-    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem" InsertItemPosition="LastItem" UpdateMethod="ListViewTopics_UpdateItem" OnSorting="ListViewTopics_Sorting">
-        <LayoutTemplate>
+    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem"
+         InsertItemPosition="LastItem" UpdateMethod="ListViewTopics_UpdateItem" 
+         OnItemDeleting="ListViewTopics_Delete" OnSorting="ListViewTopics_Sorting">
+        <LayoutTemplate> 
             <div class="row searchPanel" >
+                <div class="row sort"> 
                 <asp:LinkButton runat="server" ID="ButtonSortByTitle" CssClass="col-md-2 btn btn-default" Text="Sort by Title" CommandArgument="Title" CommandName="Sort" />
                 <asp:LinkButton runat="server" ID="ButtonSortByDate" CssClass="col-md-2 btn btn-default" Text="Sort by Date" CommandArgument="CreatedOn" CommandName="Sort" />
                 <asp:LinkButton runat="server" ID="ButtonSortByCategory" CssClass="col-md-2 btn btn-default" Text="Sort by Category" CommandArgument="CategoryType" CommandName="Sort" />
+                </div>
+                <div class="row search">
+                Search word:
+                <asp:TextBox runat="server" ID="SearchWord"></asp:TextBox>
+                &nbsp Search By:
+                <asp:DropDownList runat="server" ID="SearchBy"> 
+                    <asp:ListItem>User</asp:ListItem>
+                    <asp:ListItem>Topic title</asp:ListItem>
+                    <asp:ListItem>Topic Content</asp:ListItem>
+                </asp:DropDownList>
+                <asp:LinkButton runat="server" ID="ButtonSearch" Text="Search" CommandName="Sort"/>
+                </div>
             </div>
+            <hr />
             <div runat="server" id="itemPlaceHolder"></div>
             <div class="row">
                 <asp:DataPager runat="server" ID="DataPagerTopics" PagedControlID="ListViewTopics" PageSize="5">
@@ -28,13 +44,14 @@
                 </h3>
              </div>
             <div class="row topicInfo"> 
-               <div class="col-sm-4"><p>Category: <%#: Item.CategoryType %></p></div>
+                <div class="col-sm-4"><p>Category: <%#: Item.CategoryType %></p></div>
                 <div class="col-sm-4"><p>Author: <%#: Item.Author.UserName %></p></div>
                 <div class="col-sm-4"><p>Created on: <%#: Item.CreatedOn %></p></div>
             </div>
             <div class="row topicButtons">
+                <asp:HiddenField runat="server" ID="IDValue" Value="<%# Item.Id %>" />
                 <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
-                <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="DeleteTopic" CssClass="btn btn-danger " Text="Delete" OnClick="DeleteTopic" />
+                <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="DeleteTopic" CssClass="btn btn-danger " Text="Delete" CommandName="Delete" />
             </div>
             <hr />
         </ItemTemplate>
