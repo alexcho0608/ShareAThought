@@ -38,15 +38,45 @@
                 </asp:DataPager>
             </div>
         </LayoutTemplate>
+<InsertItemTemplate>
+            <%if (Context.User.Identity.GetUserId() != null)
+                { %>
+            <a href="#" id="buttonShowInsertPanel" class="btn btn-info pull-right" onclick="(function (ev) { $('#panelInsertTopic').show(); $('#buttonShowInsertPanel').hide(); }())">Insert new Topic</a>
+            <%} %>
+            <div id="panelInsertTopic" style="display: none;">
+
+                <div class="row">
+                    <h3>Title: 
+                    <asp:TextBox runat="server" ID="TextBoxInsertTitle" Width="300" Text="<%#: BindItem.Title %>"></asp:TextBox>
+                        <asp:RequiredFieldValidator ErrorMessage="Title is required!" ValidationGroup="InsertTopic" ControlToValidate="TextBoxInsertTitle" ForeColor="Red" runat="server" />
+                    </h3>
+                    <p>
+                        Category: 
+                    <asp:DropDownList runat="server" ID="DropDownListCategories" ItemType="Server.Models.Category" SelectedValue="<%#: BindItem.CategoryType %>" SelectMethod="DropDownListCategories_GetData">
+                    </asp:DropDownList>
+                    </p>
+                    <p>
+                        Content: 
+                    <asp:TextBox runat="server" ID="TextBoxInsertContent" Width="300" TextMode="MultiLine" Text="<%#: BindItem.Content %>" Rows="6"></asp:TextBox>
+                        <asp:RequiredFieldValidator ErrorMessage="Content is Required!" ValidationGroup="InsertTopic" ControlToValidate="TextBoxInsertContent" ForeColor="Red" runat="server" />
+                    </p>
+                    <div>
+                        <asp:LinkButton runat="server" ID="ButtonInsertTopic" CssClass="btn btn-success" CommandName="Insert" Text="Insert" CausesValidation="true" ValidationGroup="InsertTopic" />
+                        <asp:LinkButton runat="server" ID="LinkButton1" CssClass="btn btn-danger" CommandName="Cancel" Text="Cancel" CausesValidation="false" />
+                    </div>
+                </div>
+            </div>
+        </InsertItemTemplate>
         <ItemTemplate>
             <div class="row topicHeader">
                 <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" />
                 </h3>
              </div>
             <div class="row topicInfo"> 
-                <div class="col-sm-4"><p>Category: <%#: Item.CategoryType %></p></div>
-                <div class="col-sm-4"><p>Author: <%#: Item.Author.UserName %></p></div>
-                <div class="col-sm-4"><p>Created on: <%#: Item.CreatedOn %></p></div>
+                <div class="col-sm-3"><p>Category: <%#: Item.CategoryType %></p></div>
+                <div class="col-sm-3"><p>Author: <%#: Item.Author.UserName %></p></div>
+                <div class="col-sm-3"><p>Comments: <%#: Item.Comments.Count %></p></div>
+                <div class="col-sm-3"><p>Created on: <%#: Item.CreatedOn %></p></div>
             </div>
             <div class="row topicButtons">
                 <asp:HiddenField runat="server" ID="IDValue" Value="<%# Item.Id %>" />
@@ -75,32 +105,6 @@
                 </div>
             </div>
         </EditItemTemplate>
-        <InsertItemTemplate>
-            <a href="#" id="buttonShowInsertPanel" class="btn btn-info pull-right" onclick="(function (ev) { $('#panelInsertTopic').show(); $('#buttonShowInsertPanel').hide(); }())">Insert new Topic</a>
-            <div id="panelInsertTopic" style="display: none;">
-
-                <div class="row">
-                    <h3>Title: 
-                    <asp:TextBox runat="server" ID="TextBoxInsertTitle" Width="300" Text="<%#: BindItem.Title %>"></asp:TextBox>
-                        <asp:RequiredFieldValidator ErrorMessage="Title is required!" ValidationGroup="InsertTopic" ControlToValidate="TextBoxInsertTitle" ForeColor="Red" runat="server" />
-                    </h3>
-                    <p>
-                        Category: 
-                    <asp:DropDownList runat="server" ID="DropDownListCategories" ItemType="Server.Models.Category" SelectedValue="<%#: BindItem.CategoryType %>" SelectMethod="DropDownListCategories_GetData">
-                    </asp:DropDownList>
-                    </p>
-                    <p>
-                        Content: 
-                    <asp:TextBox runat="server" ID="TextBoxInsertContent" Width="300" TextMode="MultiLine" Text="<%#: BindItem.Content %>" Rows="6"></asp:TextBox>
-                        <asp:RequiredFieldValidator ErrorMessage="Content is Required!" ValidationGroup="InsertTopic" ControlToValidate="TextBoxInsertContent" ForeColor="Red" runat="server" />
-                    </p>
-                    <div>
-                        <asp:LinkButton runat="server" ID="ButtonInsertTopic" CssClass="btn btn-success" CommandName="Insert" Text="Insert" CausesValidation="true" ValidationGroup="InsertTopic" />
-                        <asp:LinkButton runat="server" ID="LinkButton1" CssClass="btn btn-danger" CommandName="Cancel" Text="Cancel" CausesValidation="false" />
-                    </div>
-                </div>
-            </div>
-        </InsertItemTemplate>
     </asp:ListView>
    </div>
 </asp:Content>

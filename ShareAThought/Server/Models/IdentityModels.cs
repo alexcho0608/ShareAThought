@@ -72,6 +72,8 @@ namespace Server.Models
         [Range(1, 200)]
         public int Age { get; set; }
 
+        public bool Suspended { get; set; }
+
         [Required]
         public string Gender { get; set; }
     }

@@ -15,6 +15,7 @@ a:hover{
 }
 .topicHeader{
     background-color:darkred;
+    border-top-left-radius:15px;
     padding-left:2%;
 }
 .topicInfo{

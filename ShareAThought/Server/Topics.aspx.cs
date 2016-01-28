@@ -152,6 +152,7 @@ namespace Server
             var topic = this.dbContext.Topics.Find(id);
             if(topic != null)
             {
+                
                 var comments = this.dbContext.Comments
                      .Where(c => c.Topic.Id == topic.Id)
                      .AsQueryable();

@@ -80,18 +80,26 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            isAdmin = false;
             if (Context.User.Identity.GetUserId() == null)
             {
-                isAdmin = false;
                 return;
             }
+
             ForumDbContext db = new ForumDbContext();
-            Role role = db.Users.Find(Context.User.Identity.GetUserId()).Role;
-            isAdmin = false;
-            if (role == Role.Admin)
+            User user = db.Users.Find(Context.User.Identity.GetUserId());
+
+            if (user.Role == Role.Admin)
             {
                 isAdmin = true;
             }
+
+            if (user.Suspended)
+            {
+                Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                return;
+            }
+
             var username = Context.User.Identity.GetUserName();
             if (username != "")
             {

@@ -66,11 +66,19 @@
             user.Role = Models.Role.Admin;
             this.dbContext.SaveChanges();
         }
+
+        protected void UnsuspendUser(object sender,EventArgs e)
+        {
+            var username = this.ListUsersControl.SelectedValue;
+            var user = this.dbContext.Users.FirstOrDefault(u => u.UserName == username);
+            user.Suspended = false;
+            this.dbContext.SaveChanges();
+        }
         protected void DeleteUser(object sender, EventArgs e)
         {
             var username = this.ListUsersControl.SelectedValue;
             var user = this.dbContext.Users.FirstOrDefault(u => u.UserName == username);
-            this.dbContext.Users.Remove(user);
+            user.Suspended = true;
             this.dbContext.SaveChanges();
         }
     }

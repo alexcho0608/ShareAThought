@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <asp:Label runat="server" AssociatedControlID="FileUploadControl" CssClass="col-md-2 control-label"></asp:Label>
+                    <asp:Label runat="server" AssociatedControlID="FileUploadControl" CssClass="col-md-2 control-label">Upload Avatar:</asp:Label>
                     <asp:FileUpload runat="server" ID="FileUploadControl" />
                 </div>
                 <div class="form-group">
