@@ -1,4 +1,4 @@
-# Web Formus Site - Discussion Forum
+# Web Forms Site - Discussion Forum
 
 Our team is "The Olmecs" and it consists of the fllowing people:
 
