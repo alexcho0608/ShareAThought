@@ -1,6 +1,6 @@
 # Web Forms Site - Discussion Forum
 
-Our team is "The Olmecs" and it consists of the fllowing people:
+Our team is "The Olmecs" and it consists of the following people:
 
   - Rodoteia_Yordanova
   - icehawk
