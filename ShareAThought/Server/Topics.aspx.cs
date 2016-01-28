@@ -157,6 +157,10 @@ namespace Server
 
         public void ListViewTopics_Delete(object sender,ListViewDeleteEventArgs e)
         {
+            if (Cache["articles"] == null)
+            {
+                Cache.Remove("articles");
+            }
             ListViewItem item = this.ListViewTopics.Items[e.ItemIndex];
             int id = Convert.ToInt32((item.FindControl("IDValue") as HiddenField).Value);
             var topic = this.dbContext.Topics.Find(id);
