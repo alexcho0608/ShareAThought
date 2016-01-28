@@ -91,7 +91,7 @@
             </div>
         </EditItemTemplate>
         <InsertItemTemplate>
-            <a href="#" id="buttonShowInsertPanel" class="btn btn-info pull-right" onclick="(function (ev) { $('#panelInsertComment').show(); $('#buttonShowInsertPanel').hide(); }())">Add new Comment</a>
+            <a href="#panelInsertComment" id="buttonShowInsertPanel" class="btn btn-info pull-right" onclick="(function (ev) { $('#panelInsertComment').show(); $('#buttonShowInsertPanel').hide(); }())">Add new Comment</a>
             <div id="panelInsertComment" style="display: none;">
                 <div class="row">
                     <p>

@@ -47,7 +47,7 @@
 
                     <div class="row">
                         <h3>Title: 
-                    <asp:TextBox runat="server" ID="TextBoxInsertTitle" Width="300" Text="<%#: BindItem.Title %>"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="TextBoxInsertTitle" Width="500" Text="<%#: BindItem.Title %>"></asp:TextBox>
                             <asp:RequiredFieldValidator ErrorMessage="Title is required!" ValidationGroup="InsertTopic" ControlToValidate="TextBoxInsertTitle" ForeColor="Red" runat="server" />
                         </h3>
                         <p>

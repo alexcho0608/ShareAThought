@@ -29,6 +29,7 @@ a{
 .commentText{
     border-left: 1px solid red;
     padding-top: 1%;
+    font-size:15px;
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .commentHeader{
@@ -72,6 +73,7 @@ a{
     border: 3px solid red;
     border-bottom:3px solid white;
     min-height:200px;
+    font-size:20px;
 }
 #contentFooter{
     width:80%;
