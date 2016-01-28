@@ -10,7 +10,7 @@
         <asp:Button ID="SearchButtonControl"  runat="server" OnClick="Search" Text="Search"/>
         </h3>
         <p>
-            <b> Users List: </b><br />
+            <b> Users Select List: </b><br />
             <asp:ListBox Height="500px" CssClass="selectpicker userListControl" DataTextField="Text" runat="server" ID="ListUsersControl"></asp:ListBox>
         </p>
         <div>

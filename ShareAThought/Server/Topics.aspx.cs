@@ -81,26 +81,6 @@ namespace Server
         public IQueryable<Server.Models.Topic> ListViewTopics_GetData([ViewState("OrderBy")]String OrderBy = null)
         {
             var articles = this.dbContext.Topics.AsQueryable();
-            if (OrderBy != null)
-            {
-                switch (this.SortDirection)
-                {
-                    case SortDirection.Ascending:
-                        articles = articles.OrderBy(OrderBy);
-                        break;
-                    case SortDirection.Descending:
-                        articles = articles.OrderBy(OrderBy + " Descending");
-                        break;
-                    default:
-                        articles = articles.OrderBy(OrderBy + " Descending");
-                        break;
-                }
-                return articles;
-            }
-            else
-            {
-                articles.OrderBy("CreatedOn Descending");
-            }
             string searchWord = (this.ListViewTopics.FindControl("SearchWord") as TextBox).Text;
             string searchBy = (this.ListViewTopics.FindControl("SearchBy") as DropDownList).SelectedValue;
             if (searchWord != "")
@@ -117,6 +97,26 @@ namespace Server
                         articles = articles.Where(a => a.Content.Contains(searchWord));
                         break;
                 }
+            }
+
+            if (OrderBy != null)
+            {
+                switch (this.SortDirection)
+                {
+                    case SortDirection.Ascending:
+                        articles = articles.OrderBy(OrderBy);
+                        break;
+                    case SortDirection.Descending:
+                        articles = articles.OrderBy(OrderBy + " Descending");
+                        break;
+                    default:
+                        articles = articles.OrderBy(OrderBy + " Descending");
+                        break;
+                }
+            }
+            else
+            {
+                articles.OrderBy("CreatedOn Descending");
             }
 
             return articles;

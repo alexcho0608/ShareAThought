@@ -62,7 +62,14 @@
         protected void PromoteUser(object sender, EventArgs e)
         {
             var username = this.ListUsersControl.SelectedValue;
+
             var user = this.dbContext.Users.FirstOrDefault(u => u.UserName == username);
+            if(user == null)
+            {
+                this.ListUsersControl.DataSource = new[] { new { Text = "Invalid user" } };
+                this.ListUsersControl.DataBind();
+                return;
+            }
             user.Role = Models.Role.Admin;
             this.dbContext.SaveChanges();
         }
@@ -71,6 +78,12 @@
         {
             var username = this.ListUsersControl.SelectedValue;
             var user = this.dbContext.Users.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
+            {
+                this.ListUsersControl.DataSource = new[] { new { Text = "Invalid user" } };
+                this.ListUsersControl.DataBind();
+                return;
+            }
             user.Suspended = false;
             this.dbContext.SaveChanges();
         }
@@ -78,6 +91,12 @@
         {
             var username = this.ListUsersControl.SelectedValue;
             var user = this.dbContext.Users.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
+            {
+                this.ListUsersControl.DataSource = new[] { new { Text = "Invalid user" } };
+                this.ListUsersControl.DataBind();
+                return;
+            }
             user.Suspended = true;
             this.dbContext.SaveChanges();
         }
