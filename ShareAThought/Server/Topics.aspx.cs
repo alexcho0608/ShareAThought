@@ -80,9 +80,19 @@ namespace Server
 
         public IQueryable<Server.Models.Topic> ListViewTopics_GetData([ViewState("OrderBy")]String OrderBy = null)
         {
-            var articles = this.dbContext.Topics.AsQueryable();
+            IQueryable<Topic> articles;
+            if (Cache["articles"] != null)
+            {
+                articles = (IQueryable<Topic>)Cache["articles"];
+            }
+            else
+            {
+                articles = this.dbContext.Topics.AsQueryable();
+                Cache.Insert("articles", articles, null, DateTime.Now.AddSeconds(120), TimeSpan.Zero);
+            }
             string searchWord = (this.ListViewTopics.FindControl("SearchWord") as TextBox).Text;
             string searchBy = (this.ListViewTopics.FindControl("SearchBy") as DropDownList).SelectedValue;
+
             if (searchWord != "")
             {
                 switch (searchBy)
@@ -90,7 +100,7 @@ namespace Server
                     case SearchPatternsConstats.Username:
                         articles = articles.Where(a => a.Author.UserName.Contains(searchWord));
                         break;
-                    case SearchPatternsConstats.TopicName:
+                    case SearchPatternsConstats.TopicTitle:
                         articles = articles.Where(a => a.Title.Contains(searchWord));
                         break;
                     default:
