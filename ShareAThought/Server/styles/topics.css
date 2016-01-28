@@ -1,0 +1,37 @@
+﻿.searchPanel{
+    border: 1px solid black;
+    padding:1%;
+    width:80%;
+}
+.row .sort{
+    margin-left:2%;
+}
+.row .search{
+    margin-top:1%;
+    margin-left:2%;
+}
+a:hover{
+    text-decoration:none;
+}
+.topicHeader{
+    background-color:darkred;
+    border-top-left-radius:15px;
+    padding-left:2%;
+}
+.topicInfo{
+    padding-top:1%;
+    border:1px solid darkred;
+}
+.topicButtons{
+    padding-top:1%;
+    padding-left:90%;
+}
+body{
+    background-color:grey;
+}
+.body-content{
+    overflow:hidden;
+    margin:2%;
+    background-color:white;
+    padding-left:2%;
+}

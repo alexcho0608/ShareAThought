@@ -9,6 +9,8 @@ using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using System.IO;
 using System.Reflection;
+using Server.Common;
+using Server.Models;
 
 namespace Server
 {
@@ -20,7 +22,7 @@ namespace Server
 
         protected const string defaultImagePath = "Images/default.gif";
         protected const string imagePath = "Images/{0}";
-
+        protected bool isAdmin;
         protected void Page_Init(object sender, EventArgs e)
         {
             // The code below helps to protect against XSRF attacks
@@ -78,11 +80,31 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            isAdmin = false;
+            if (Context.User.Identity.GetUserId() == null)
+            {
+                return;
+            }
+
+            ForumDbContext db = new ForumDbContext();
+            User user = db.Users.Find(Context.User.Identity.GetUserId());
+
+            if (user.Role == Role.Admin)
+            {
+                isAdmin = true;
+            }
+
+            if (user.Suspended)
+            {
+                Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                return;
+            }
+
             var username = Context.User.Identity.GetUserName();
             if (username != "")
             {
                 var control = (ImageButton)this.LoginView1.FindControl("Avatar");
-                string path = Server.MapPath("~/Images/") + username + "\\";
+                string path = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + username + "\\";
                 DirectoryInfo dInfo = new DirectoryInfo(path);
                 if (dInfo.GetFiles().Length != 0)
                 {

@@ -6,6 +6,9 @@ body {
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
+form{
+    background-color:grey;
+}
 .body-content {
     padding-left: 15px;
     padding-right: 15px;

@@ -7,45 +7,63 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Server.Controls {
+namespace Server {
     
     
-    public partial class LikeControl {
+    public partial class AdminPanel {
         
         /// <summary>
-        /// ControlWrapper control.
+        /// UserSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdatePanel ControlWrapper;
+        protected global::System.Web.UI.WebControls.TextBox UserSearch;
         
         /// <summary>
-        /// LabelValue control.
+        /// SearchButtonControl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label LabelValue;
+        protected global::System.Web.UI.WebControls.Button SearchButtonControl;
         
         /// <summary>
-        /// ButtonLike control.
+        /// ListUsersControl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton ButtonLike;
+        protected global::System.Web.UI.WebControls.ListBox ListUsersControl;
         
         /// <summary>
-        /// ButtonDislike control.
+        /// DeleteUserButton control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton ButtonDislike;
+        protected global::System.Web.UI.WebControls.LinkButton DeleteUserButton;
+        
+        /// <summary>
+        /// LinkButton1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
+        
+        /// <summary>
+        /// LinkButton2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton LinkButton2;
     }
 }

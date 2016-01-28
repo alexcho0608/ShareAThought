@@ -1,0 +1,84 @@
+﻿body{
+    background-color:grey;
+}
+#panelInsertComment{
+    margin-left:5%;
+    margin-top:1%;
+}
+a{
+    color:white;
+}
+.pager{
+    margin-top:1%;
+}
+.like-control{
+    margin-left:10%;
+}
+.likeMenu span{
+    float:left;
+}
+.likeMenu a{
+    float:right
+}
+.formView{
+    width:100%;
+    margin-top:2%;
+    margin-bottom:2%;
+    background-color:white;
+}
+.commentText{
+    border-left: 1px solid red;
+    padding-top: 1%;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.commentHeader{
+    background-color:darkred;
+    padding-right:10%;
+    padding-top:1%;
+    color:black;
+    font-weight:bold;
+}
+#commentContainer{
+    width:100%;
+    margin-top:1%;
+    margin-left:0.1%;
+    padding-left:1.3%;
+    overflow:hidden;
+    border: 1px solid red;
+    background-color:white;
+}
+.commentView{
+    width:100%;
+    margin-left:5%;
+}
+#topicTitle{
+    margin-bottom:0.5%;
+    padding:0.5% 0% 0% 15%;
+    letter-spacing: 5px;
+    font-family:Impact;
+    border-top:1px solid black;
+    border-bottom:1px solid black;
+}
+#topicContent{
+    background-color:white;
+    display:block;
+}
+#mainBlock{
+    padding-top:2%;
+    padding-left:1%;
+    margin-left:10%;
+    width:80%;
+    background-color:grey;
+    border: 3px solid red;
+    border-bottom:3px solid white;
+    min-height:200px;
+}
+#contentFooter{
+    width:80%;
+    margin-left:10%;
+    font-weight:bold;
+    font-size:large;
+    background-color:white;
+    border: 3px solid red;
+    border-top-color: white;
+}

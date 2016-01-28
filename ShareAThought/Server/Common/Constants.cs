@@ -11,4 +11,18 @@
         public const int MinContentLength = 5;
         public const int MaxContentLength = 500;
     }
+
+    public class ServerPathConstants
+    {
+        public const string ImageDirectory = "/Images/";
+        public const string CommonImageName = "avatar.";
+        public const string DefaultName = "default.gif";
+    }
+
+    public class SearchPatternsConstats
+    {
+        public const string Username = "User";
+        public const string TopicTitle = "Topic Title";
+        public const string TopicName = "Topic Name";
+    }
 }

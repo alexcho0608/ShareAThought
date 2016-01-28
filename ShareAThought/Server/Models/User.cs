@@ -22,6 +22,7 @@
             this.likes = new HashSet<Like>();
         }
 
+        public bool Suspended { get; set; }
 
         public Role Role { get; set; }
 

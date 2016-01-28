@@ -6,6 +6,7 @@ using System.Web.ModelBinding;
 using Server.Models;
 using Microsoft.AspNet.Identity;
 using System.Web.UI.WebControls;
+using Server.Common;
 
 namespace Server
 {
@@ -13,6 +14,7 @@ namespace Server
     {
         private bool changeDirection = false;
 
+        protected bool isAdmin;
         public SortDirection SortDirection
         {
             get
@@ -40,7 +42,23 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            var username = User.Identity.GetUserName();
+            if (username == "")
+            {
+                isAdmin = false;
+                return;
+            }
 
+            var user = this.dbContext.Users.First(u => u.UserName == username);
+            if (user.Role == Models.Role.Admin)
+            {
+                isAdmin = true;
+            }
+
+            else
+            {
+                isAdmin = false;
+            }
         }
 
         protected void ListViewTopics_Sorting(object sender, ListViewSortEventArgs e)
@@ -83,7 +101,23 @@ namespace Server
             {
                 articles.OrderBy("CreatedOn Descending");
             }
-
+            string searchWord = (this.ListViewTopics.FindControl("SearchWord") as TextBox).Text;
+            string searchBy = (this.ListViewTopics.FindControl("SearchBy") as DropDownList).SelectedValue;
+            if (searchWord != "")
+            {
+                switch (searchBy)
+                {
+                    case SearchPatternsConstats.Username:
+                        articles = articles.Where(a => a.Author.UserName.Contains(searchWord));
+                        break;
+                    case SearchPatternsConstats.TopicName:
+                        articles = articles.Where(a => a.Title.Contains(searchWord));
+                        break;
+                    default:
+                        articles = articles.Where(a => a.Content.Contains(searchWord));
+                        break;
+                }
+            }
 
             return articles;
         }
@@ -93,6 +127,10 @@ namespace Server
             return Enum.GetValues(typeof(Category)).OfType<Category>();
         }
 
+        public void GetTopics(object sender, EventArgs e)
+        {
+            
+        }
         public void ListViewTopics_InsertItem()
         {
             var item = new Server.Models.Topic();
@@ -107,6 +145,37 @@ namespace Server
             }
         }
 
+        public void ListViewTopics_Delete(object sender,ListViewDeleteEventArgs e)
+        {
+            ListViewItem item = this.ListViewTopics.Items[e.ItemIndex];
+            int id = Convert.ToInt32((item.FindControl("IDValue") as HiddenField).Value);
+            var topic = this.dbContext.Topics.Find(id);
+            if(topic != null)
+            {
+                
+                var comments = this.dbContext.Comments
+                     .Where(c => c.Topic.Id == topic.Id)
+                     .AsQueryable();
+                var likes = this.dbContext.Likes
+                     .Where(c => c.Topic.Id == topic.Id)
+                     .AsQueryable();
+                foreach (var c in comments)
+                {
+                    this.dbContext.Comments.Remove(c);
+                }
+
+                foreach(var l in likes)
+                {
+                    this.dbContext.Likes.Remove(l);
+                }
+
+                this.dbContext.Topics.Remove(topic);
+                this.dbContext.SaveChanges();
+
+                this.Response.Redirect("/Topics");
+            }
+
+        }
         public void ListViewTopics_UpdateItem(int id)
         {
             Server.Models.Topic item = this.dbContext.Topics.Find(id);

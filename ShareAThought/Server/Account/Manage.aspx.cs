@@ -10,6 +10,7 @@ using Microsoft.Owin.Security;
 using Owin;
 using Server.Models;
 using System.IO;
+using Server.Common;
 
 namespace Server.Account
 {
@@ -102,8 +103,8 @@ namespace Server.Account
             if (FileUploadControl.HasFile && FileUploadControl.PostedFile.ContentType.Contains("image"))
             {
                 string filename = FileUploadControl.FileName;
-                filename = "avatar." + filename.Split('.').LastOrDefault();
-                string path = Server.MapPath("~/Images/") + FoundUser.UserName + "/";
+                filename = ServerPathConstants.CommonImageName + filename.Split('.').LastOrDefault();
+                string path = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + FoundUser.UserName + "/";
                 DirectoryInfo dInfo = new DirectoryInfo(path);
                 foreach(FileInfo f in dInfo.GetFiles())
                 {
@@ -130,7 +131,6 @@ namespace Server.Account
                 return;
             }
             Message.Text = "Success!";
-            this.Response.Redirect("~/Account/Manage");
         }
 
         private void AddErrors(IdentityResult result)

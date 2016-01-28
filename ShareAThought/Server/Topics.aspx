@@ -1,14 +1,32 @@
 ﻿<%@ Page Title="Topics" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Topics.aspx.cs" Inherits="Server.Topics" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-    <h2><%: Title %>.</h2>
-    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem" InsertItemPosition="LastItem" UpdateMethod="ListViewTopics_UpdateItem" OnSorting="ListViewTopics_Sorting">
-        <LayoutTemplate>
-            <div class="row">
+    <div class="topicsContainer">
+    <link rel="stylesheet" href="styles/topics.css" />
+     <h2><%: Title %>.</h2>
+    <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem"
+         InsertItemPosition="LastItem" UpdateMethod="ListViewTopics_UpdateItem" 
+         OnItemDeleting="ListViewTopics_Delete" OnSorting="ListViewTopics_Sorting">
+        <LayoutTemplate> 
+            <div class="row searchPanel" >
+                <div class="row sort"> 
                 <asp:LinkButton runat="server" ID="ButtonSortByTitle" CssClass="col-md-2 btn btn-default" Text="Sort by Title" CommandArgument="Title" CommandName="Sort" />
                 <asp:LinkButton runat="server" ID="ButtonSortByDate" CssClass="col-md-2 btn btn-default" Text="Sort by Date" CommandArgument="CreatedOn" CommandName="Sort" />
                 <asp:LinkButton runat="server" ID="ButtonSortByCategory" CssClass="col-md-2 btn btn-default" Text="Sort by Category" CommandArgument="CategoryType" CommandName="Sort" />
+                </div>
+                <div class="row search">
+                Search word:
+                <asp:TextBox runat="server" ID="SearchWord"></asp:TextBox>
+                &nbsp Search By:
+                <asp:DropDownList runat="server" ID="SearchBy"> 
+                    <asp:ListItem>User</asp:ListItem>
+                    <asp:ListItem>Topic title</asp:ListItem>
+                    <asp:ListItem>Topic Content</asp:ListItem>
+                </asp:DropDownList>
+                <asp:LinkButton runat="server" ID="ButtonSearch" Text="Search" CommandName="Sort"/>
+                </div>
             </div>
+            <hr />
             <div runat="server" id="itemPlaceHolder"></div>
             <div class="row">
                 <asp:DataPager runat="server" ID="DataPagerTopics" PagedControlID="ListViewTopics" PageSize="5">
@@ -20,40 +38,11 @@
                 </asp:DataPager>
             </div>
         </LayoutTemplate>
-        <ItemTemplate>
-            <div class="row">
-                <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" />
-                    <asp:LinkButton runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
-                </h3>
-                <p><%#: Item.CategoryType %></p>
-                <p>
-                    <%#: Item.Author.UserName %>
-                </p>
-                <p><%#: Item.CreatedOn %></p>
-            </div>
-        </ItemTemplate>
-        <EditItemTemplate>
-            <div class="row">
-                <h3>
-                    <asp:TextBox runat="server" ID="TextBoxEditTitle" Text="<%# BindItem.Title %>" />
-                    <asp:RequiredFieldValidator ErrorMessage="Title is required" ValidationGroup="EditTopic" ControlToValidate="TextBoxEditTitle" ForeColor="Red" runat="server" />
-                    <asp:LinkButton runat="server" ID="ButtonEditTopic" CssClass="btn btn-success" Text="Save" CommandName="Update" CausesValidation="true" ValidationGroup="EditTopic" />
-                    <asp:LinkButton runat="server" ID="ButtonDeleteTopic" CssClass="btn btn-danger" Text="Cancel" CommandName="Cancel" CausesValidation="false" />
-                </h3>
-                <p>
-                    <asp:DropDownList runat="server" ID="DropDownListCategories"
-                        SelectedValue="<%#: BindItem.CategoryType %>" SelectMethod="DropDownListCategories_GetData" />
-                <p>
-                    <asp:TextBox runat="server" ID="TextBoxEditContent" Text="<%# BindItem.Content %>" TextMode="MultiLine" Rows="6" Width="100%" /><asp:RequiredFieldValidator ErrorMessage="Content is required" ValidationGroup="EditTitle" ControlToValidate="TextBoxEditContent" ForeColor="Red" runat="server" />
-                </p>
-                <div>
-                    <i>by <%#: this.User.Identity.GetUserName() %></i>
-                    <i>created on: <%# Item.CreatedOn %></i>
-                </div>
-            </div>
-        </EditItemTemplate>
-        <InsertItemTemplate>
+<InsertItemTemplate>
+            <%if (Context.User.Identity.GetUserId() != null)
+                { %>
             <a href="#" id="buttonShowInsertPanel" class="btn btn-info pull-right" onclick="(function (ev) { $('#panelInsertTopic').show(); $('#buttonShowInsertPanel').hide(); }())">Insert new Topic</a>
+            <%} %>
             <div id="panelInsertTopic" style="display: none;">
 
                 <div class="row">
@@ -78,5 +67,44 @@
                 </div>
             </div>
         </InsertItemTemplate>
+        <ItemTemplate>
+            <div class="row topicHeader">
+                <h3><asp:hyperlink navigateurl='<%# "~/ViewTopic?id=" + Item.Id %>' runat="server" Text="<%#: Item.Title %>" />
+                </h3>
+             </div>
+            <div class="row topicInfo"> 
+                <div class="col-sm-3"><p>Category: <%#: Item.CategoryType %></p></div>
+                <div class="col-sm-3"><p>Author: <%#: Item.Author.UserName %></p></div>
+                <div class="col-sm-3"><p>Comments: <%#: Item.Comments.Count %></p></div>
+                <div class="col-sm-3"><p>Created on: <%#: Item.CreatedOn %></p></div>
+            </div>
+            <div class="row topicButtons">
+                <asp:HiddenField runat="server" ID="IDValue" Value="<%# Item.Id %>" />
+                <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
+                <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="DeleteTopic" CssClass="btn btn-danger " Text="Delete" CommandName="Delete" />
+            </div>
+            <hr />
+        </ItemTemplate>
+        <EditItemTemplate>
+            <div class="row">
+                <h3>
+                    <asp:TextBox runat="server" ID="TextBoxEditTitle" Text="<%# BindItem.Title %>" />
+                    <asp:RequiredFieldValidator ErrorMessage="Title is required" ValidationGroup="EditTopic" ControlToValidate="TextBoxEditTitle" ForeColor="Red" runat="server" />
+                    <asp:LinkButton runat="server" ID="ButtonEditTopic" CssClass="btn btn-success" Text="Save" CommandName="Update" CausesValidation="true" ValidationGroup="EditTopic" />
+                    <asp:LinkButton runat="server" ID="ButtonDeleteTopic" CssClass="btn btn-danger" Text="Cancel" CommandName="Cancel" CausesValidation="false" />
+                </h3>
+                <p>
+                    <asp:DropDownList runat="server" ID="DropDownListCategories"
+                        SelectedValue="<%#: BindItem.CategoryType %>" SelectMethod="DropDownListCategories_GetData" />
+                <p>
+                    <asp:TextBox runat="server" ID="TextBoxEditContent" Text="<%# BindItem.Content %>" TextMode="MultiLine" Rows="6" Width="100%" /><asp:RequiredFieldValidator ErrorMessage="Content is required" ValidationGroup="EditTitle" ControlToValidate="TextBoxEditContent" ForeColor="Red" runat="server" />
+                </p>
+                <div>
+                    <i>by <%#: this.User.Identity.GetUserName() %></i>
+                    <i>created on: <%# Item.CreatedOn %></i>
+                </div>
+            </div>
+        </EditItemTemplate>
     </asp:ListView>
+   </div>
 </asp:Content>
