@@ -81,6 +81,24 @@ namespace Server
         public IQueryable<Server.Models.Topic> ListViewTopics_GetData([ViewState("OrderBy")]String OrderBy = null)
         {
             var articles = this.dbContext.Topics.AsQueryable();
+            string searchWord = (this.ListViewTopics.FindControl("SearchWord") as TextBox).Text;
+            string searchBy = (this.ListViewTopics.FindControl("SearchBy") as DropDownList).SelectedValue;
+            if (searchWord != "")
+            {
+                switch (searchBy)
+                {
+                    case SearchPatternsConstats.Username:
+                        articles = articles.Where(a => a.Author.UserName.Contains(searchWord));
+                        break;
+                    case SearchPatternsConstats.TopicTitle:
+                        articles = articles.Where(a => a.Title.Contains(searchWord));
+                        break;
+                    default:
+                        articles = articles.Where(a => a.Content.Contains(searchWord));
+                        break;
+                }
+            }
+
             if (OrderBy != null)
             {
                 switch (this.SortDirection)
@@ -95,28 +113,10 @@ namespace Server
                         articles = articles.OrderBy(OrderBy + " Descending");
                         break;
                 }
-                return articles;
             }
             else
             {
                 articles.OrderBy("CreatedOn Descending");
-            }
-            string searchWord = (this.ListViewTopics.FindControl("SearchWord") as TextBox).Text;
-            string searchBy = (this.ListViewTopics.FindControl("SearchBy") as DropDownList).SelectedValue;
-            if (searchWord != "")
-            {
-                switch (searchBy)
-                {
-                    case SearchPatternsConstats.Username:
-                        articles = articles.Where(a => a.Author.UserName.Contains(searchWord));
-                        break;
-                    case SearchPatternsConstats.TopicName:
-                        articles = articles.Where(a => a.Title.Contains(searchWord));
-                        break;
-                    default:
-                        articles = articles.Where(a => a.Content.Contains(searchWord));
-                        break;
-                }
             }
 
             return articles;
@@ -129,7 +129,7 @@ namespace Server
 
         public void GetTopics(object sender, EventArgs e)
         {
-            
+
         }
         public void ListViewTopics_InsertItem()
         {
@@ -145,14 +145,14 @@ namespace Server
             }
         }
 
-        public void ListViewTopics_Delete(object sender,ListViewDeleteEventArgs e)
+        public void ListViewTopics_Delete(object sender, ListViewDeleteEventArgs e)
         {
             ListViewItem item = this.ListViewTopics.Items[e.ItemIndex];
             int id = Convert.ToInt32((item.FindControl("IDValue") as HiddenField).Value);
             var topic = this.dbContext.Topics.Find(id);
-            if(topic != null)
+            if (topic != null)
             {
-                
+
                 var comments = this.dbContext.Comments
                      .Where(c => c.Topic.Id == topic.Id)
                      .AsQueryable();
@@ -164,7 +164,7 @@ namespace Server
                     this.dbContext.Comments.Remove(c);
                 }
 
-                foreach(var l in likes)
+                foreach (var l in likes)
                 {
                     this.dbContext.Likes.Remove(l);
                 }
