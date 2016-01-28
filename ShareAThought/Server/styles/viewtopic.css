@@ -8,18 +8,19 @@
 a{
     color:white;
 }
+.likeMenu{
+    width:200px;
+}
+.likeMenu a{
+    display:inline-block;
+}
 .pager{
     margin-top:1%;
 }
 .like-control{
     margin-left:10%;
 }
-.likeMenu span{
-    float:left;
-}
-.likeMenu a{
-    float:right
-}
+
 .formView{
     width:100%;
     margin-top:2%;
