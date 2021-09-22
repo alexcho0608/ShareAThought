@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Owin;
 using Server.Models;
 using System.IO;
+using DAL.Config;
+using DAL.Models;
 
 namespace Server.Account
 {
@@ -16,7 +18,7 @@ namespace Server.Account
         {
             var manager = Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var signInManager = Context.GetOwinContext().Get<ApplicationSignInManager>();
-            var user = new ApplicationUser() { UserName = Username.Text, Email = Email.Text, Role = 0, Age = int.Parse(Age.Text), Gender = Gender.Text };
+            var user = new ApplicationUser() { UserName = Username.Text, Email = Email.Text, Role = DAL.Models.Role.User, Age = int.Parse(Age.Text), Gender = Gender.Text };
             IdentityResult result = manager.Create(user, Password.Text);
             if (result.Succeeded)
             {

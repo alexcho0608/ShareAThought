@@ -12,6 +12,9 @@
     using System.Web.UI;
     using System.IO;
     using Common;
+    using Server.Mapper;
+    using ServerModel = Server.Models;
+    using Server.Helper;
 
     public partial class ViewTopic : BasePage
     {
@@ -19,7 +22,7 @@
         protected bool isAdmin;
 
         protected Dictionary<string, string> cache;
-
+        AutoMapper.Mapper mapper = MapperFactory.GetMapper();
 
         protected void Page_Init(object sender, EventArgs e)
         {
@@ -31,7 +34,8 @@
                 return;
             }
 
-            var user = this.dbContext.Users.First(u => u.UserName == username);
+            var dtoUser = this.dbContext.Users.First(u => u.UserName == username);
+            var user = mapper.Map<ServerModel.User>(dtoUser);
             if (user.Role == Models.Role.Admin)
             {
                 isAdmin = true;
@@ -48,7 +52,10 @@
 
         public Topic FormViewTopic_GetItem([QueryString("id")]int? id)
         {
-            return this.dbContext.Topics.FirstOrDefault(a => a.Id == id); ;
+            var dtoTopic =  this.dbContext.Topics.FirstOrDefault(a => a.Id == id);
+            var mapper = MapperFactory.GetMapper();
+            var topic = mapper.Map<Models.Topic>(dtoTopic);
+            return topic;
         }
 
         protected string getPath(string username)
@@ -57,22 +64,12 @@
             {
                 return cache[username];
             }
-
+            string imgPath = null;
             string path = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + username + "\\";
-            DirectoryInfo dInfo = new DirectoryInfo(path);
-            if (dInfo.GetFiles().Length == 0)
-            {
-                cache.Add(username, ServerPathConstants.ImageDirectory + ServerPathConstants.DefaultName);
-            }
-            else
-            {
-                var fullFilename = Directory
-                    .GetFiles(path, "*", SearchOption.AllDirectories)[0];
-                string[] splits = fullFilename.Split('\\');
-                var filename = splits[splits.Length - 1];
-                cache.Add(username, ServerPathConstants.ImageDirectory + username + "/" + filename);
-            }
 
+            imgPath = ImageHelper.GetUserAvatarOrDefault(path, username);
+
+            cache.Add(username, imgPath);
             return cache[username];
         }
 
@@ -89,11 +86,11 @@
         protected void LikeControl_Like(object sender, LikeEventArgs e)
         {
             string userID = this.User.Identity.GetUserId();
-            Topic article = this.dbContext.Topics.Find(e.DataID);
-            Like like = article.Likes.FirstOrDefault(l => l.UserId == userID);
+            var dtoArticle = this.dbContext.Topics.Find(e.DataID);
+            DAL.Models.Like like = dtoArticle.Likes.FirstOrDefault(l => l.UserId == userID);
             if (like == null)
             {
-                like = new Like()
+                like = new DAL.Models.Like()
                 {
                     UserId = userID,
                 };
@@ -105,7 +102,7 @@
             this.dbContext.SaveChanges();
 
             var control = sender as LikeControl;
-            control.Value = article.Likes.Sum(l => l.Value);
+            control.Value = dtoArticle.Likes.Sum(l => l.Value);
             control.CurrentUserVote = e.LikeValue;
 
         }
@@ -124,16 +121,20 @@
 
         public IQueryable<Server.Models.Comment> ListViewComments_GetData([QueryString("id")]int? id)
         {
-            var comments = this.dbContext.Comments.AsQueryable();
-            comments = comments.Where(c => c.TopicId == id).OrderBy("CreatedOn");
+
+            var dtoComments = this.dbContext.Comments.AsQueryable();
+            var comments = dtoComments.Where(c => c.TopicId == id).OrderBy("CreatedOn")
+                .ToList()
+                .AsQueryable()
+                .Select(dtoComment => mapper.Map<ServerModel.Comment>(dtoComment));
             return comments;
         }
 
         public void ListViewComments_InsertItem()
         {
-            var comment = new Server.Models.Comment();
+            var comment = new DAL.Models.Comment();
             comment.CreatedOn = DateTime.Now;
-            comment.UserId = User.Identity.GetUserId();
+            comment.AuthorId = User.Identity.GetUserId();
             comment.TopicId = int.Parse(Request.QueryString["id"]);
             TryUpdateModel(comment);
             if (ModelState.IsValid)
@@ -147,15 +148,16 @@
 
         public void ListViewComments_UpdateItem(int id)
         {
-            Server.Models.Comment item = this.dbContext.Comments.Find(id);
-            if (item == null)
+            var dtoComment = this.dbContext.Comments.Find(id);
+            var comment = mapper.Map<ServerModel.Comment>(dtoComment);
+            if (comment == null)
             {
                 // The item wasn't found
                 ModelState.AddModelError("", String.Format("Item with id {0} was not found", id));
                 return;
             }
 
-            TryUpdateModel(item);
+            TryUpdateModel(comment);
             if (ModelState.IsValid)
             {
                 this.dbContext.SaveChanges();

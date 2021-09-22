@@ -17,6 +17,9 @@
         public const string ImageDirectory = "/Images/";
         public const string CommonImageName = "avatar.";
         public const string DefaultName = "default.gif";
+
+        public const string defaultImagePath = "Images/default.gif";
+        public const string imagePath = "Images/{0}";
     }
 
     public class SearchPatternsConstats

@@ -1,9 +1,40 @@
 ﻿<%@ Page Title="Topics" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Topics.aspx.cs" Inherits="Server.Topics" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+
+    <script runat="server">        
+
+        void SortButton_Click_Title(Object sender, EventArgs e)
+        {
+            String expression = "Title DESC";
+            SortDirection sortDirection = (SortDirection)((Int32.Parse(direction.Value) + 1)%2);
+            direction.Value = ((int)sortDirection).ToString();
+            ListViewTopics.Sort(expression, sortDirection);
+
+        }
+
+        void SortButton_Click_Date(Object sender, EventArgs e)
+        {
+            String expression = "CreatedOn DESC";
+            SortDirection sortDirection = (SortDirection)((Int32.Parse(direction.Value) + 1)%2);
+            direction.Value = ((int)sortDirection).ToString();
+            ListViewTopics.Sort(expression, sortDirection);
+        }
+
+        void SortButton_Click_Category(Object sender, EventArgs e)
+        {
+            String expression = "Category DESC";
+            SortDirection sortDirection = (SortDirection)((Int32.Parse(direction.Value) + 1)%2);
+            direction.Value = ((int)sortDirection).ToString();
+            ListViewTopics.Sort(expression, sortDirection);
+        }
+
+</script>
+
     <div class="topicsContainer">
         <link rel="stylesheet" href="styles/topics.css" />
         <h2><%: Title %>.</h2>
+        <asp:HiddenField ID="direction" runat="server" Value="1" />
         <asp:ListView runat="server" ID="ListViewTopics" ItemType="Server.Models.Topic" DataKeyNames="ID" SelectMethod="ListViewTopics_GetData" InsertMethod="ListViewTopics_InsertItem"
             InsertItemPosition="LastItem" UpdateMethod="ListViewTopics_UpdateItem"
             OnItemDeleting="ListViewTopics_Delete" OnSorting="ListViewTopics_Sorting">
@@ -11,7 +42,7 @@
                 <div class="row searchPanel">
                     <div class="row sort">
                         <asp:LinkButton runat="server" ID="ButtonSortByTitle" CssClass="col-md-2 btn btn-default" Text="Sort by Title" CommandArgument="Title" CommandName="Sort" />
-                        <asp:LinkButton runat="server" ID="ButtonSortByDate" CssClass="col-md-2 btn btn-default" Text="Sort by Date" CommandArgument="CreatedOn" CommandName="Sort" />
+                        <asp:LinkButton runat="server" ID="ButtonSortByDate" CssClass="col-md-2 btn btn-default" Text="Sort by Date" CommandArgument="CreatedOn" CommandName="Sort"  />
                         <asp:LinkButton runat="server" ID="ButtonSortByCategory" CssClass="col-md-2 btn btn-default" Text="Sort by Category" CommandArgument="CategoryType" CommandName="Sort" />
                     </div>
                     <div class="row search">
@@ -57,7 +88,7 @@
                         </p>
                         <p>
                             Content: 
-                    <asp:TextBox runat="server" ID="TextBoxInsertContent" Width="300" TextMode="MultiLine" Text="<%#: BindItem.Content %>" Rows="6"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="TextBoxInsertContent" Width="300"  TextMode="MultiLine" Text="<%#: BindItem.Content %>" Rows="6"></asp:TextBox>
                             <asp:RequiredFieldValidator ErrorMessage="Content is Required!" ValidationGroup="InsertTopic" ControlToValidate="TextBoxInsertContent" ForeColor="Red" runat="server" />
                         </p>
                         <div>
@@ -89,8 +120,8 @@
                 </div>
                 <div class="row topicButtons">
                     <asp:HiddenField runat="server" ID="IDValue" Value="<%# Item.Id %>" />
-                    <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
-                    <asp:LinkButton Visible="<%# (Item.UserId == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="DeleteTopic" CssClass="btn btn-danger " Text="Delete" CommandName="Delete" />
+                    <asp:LinkButton Visible="<%# (Item.UserID == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="ButtonEditTopic" CssClass="btn btn-info " Text="Edit" CommandName="Edit" />
+                    <asp:LinkButton Visible="<%# (Item.UserID == Context.User.Identity.GetUserId()) || isAdmin %>" runat="server" ID="DeleteTopic" CssClass="btn btn-danger " Text="Delete" CommandName="Delete" />
                 </div>
                 <hr />
             </ItemTemplate>

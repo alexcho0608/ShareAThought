@@ -1,4 +1,5 @@
 ﻿using System.Web.UI;
+using DAL.Models;
 using Server.Models;
 
 namespace Server

@@ -11,7 +11,8 @@ using System.IO;
 using System.Reflection;
 using Server.Common;
 using Server.Models;
-
+using DAL.Models;
+using Server.Helper;
 namespace Server
 {
     public partial class SiteMaster : MasterPage
@@ -87,14 +88,14 @@ namespace Server
             }
 
             ForumDbContext db = new ForumDbContext();
-            User user = db.Users.Find(Context.User.Identity.GetUserId());
+            var dtoUser = db.Users.Find(Context.User.Identity.GetUserId());
 
-            if (user.Role == Role.Admin)
+            if (dtoUser.Role == DAL.Models.Role.Admin)
             {
                 isAdmin = true;
             }
 
-            if (user.Suspended)
+            if (dtoUser.Suspended)
             {
                 Context.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                 return;
@@ -104,21 +105,9 @@ namespace Server
             if (username != "")
             {
                 var control = (ImageButton)this.LoginView1.FindControl("Avatar");
-                string path = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + username + "\\";
-                DirectoryInfo dInfo = new DirectoryInfo(path);
-                if (dInfo.GetFiles().Length != 0)
-                {
-                    var fullFilename = Directory
-                        .GetFiles(path, "*", SearchOption.AllDirectories)[0];
-                    string[] splits = fullFilename.Split('\\');
-                    var filename = splits[splits.Length - 1];
-                        
-                    control.ImageUrl = String.Format(imagePath,username) + "/" + filename;
-                }
-                else
-                {
-                    control.ImageUrl = defaultImagePath;
-                }
+                var localpath = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + username + "\\";
+                var path = ImageHelper.GetUserAvatarOrDefault(localpath, username);
+                control.ImageUrl = path;
             }
         }
 

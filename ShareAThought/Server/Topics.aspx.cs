@@ -7,6 +7,8 @@ using Server.Models;
 using Microsoft.AspNet.Identity;
 using System.Web.UI.WebControls;
 using Server.Common;
+using Server.Mapper;
+using System.Linq.Expressions;
 
 namespace Server
 {
@@ -42,6 +44,7 @@ namespace Server
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            System.Diagnostics.Trace.WriteLine("Enter topics page");
             var username = User.Identity.GetUserName();
             if (username == "")
             {
@@ -49,7 +52,8 @@ namespace Server
                 return;
             }
 
-            var user = this.dbContext.Users.First(u => u.UserName == username);
+            var userDto = this.dbContext.Users.First(u => u.UserName == username);
+            var user = MapperFactory.GetMapper().Map<Models.User>(userDto);
             if (user.Role == Models.Role.Admin)
             {
                 isAdmin = true;
@@ -78,18 +82,12 @@ namespace Server
             this.ListViewTopics.DataBind();
         }
 
-        public IQueryable<Server.Models.Topic> ListViewTopics_GetData([ViewState("OrderBy")]String OrderBy = null)
+        public IQueryable<Server.Models.Topic> ListViewTopics_GetData([ViewState("OrderBy")] String OrderBy = null)
         {
+            var mapper = MapperFactory.GetMapper();
             IQueryable<Topic> articles;
-            if (Cache["articles"] != null)
-            {
-                articles = (IQueryable<Topic>)Cache["articles"];
-            }
-            else
-            {
-                articles = this.dbContext.Topics.AsQueryable();
-                Cache.Insert("articles", articles, null, DateTime.Now.AddSeconds(120), TimeSpan.Zero);
-            }
+            this.dbContext.Database.Log = s => System.Diagnostics.Debug.WriteLine(s);
+            IQueryable<DAL.Models.Topic> articlesDto = this.dbContext.Topics.AsQueryable();
             string searchWord = (this.ListViewTopics.FindControl("SearchWord") as TextBox).Text;
             string searchBy = (this.ListViewTopics.FindControl("SearchBy") as DropDownList).SelectedValue;
 
@@ -98,35 +96,76 @@ namespace Server
                 switch (searchBy)
                 {
                     case SearchPatternsConstats.Username:
-                        articles = articles.Where(a => a.Author.UserName.Contains(searchWord));
+                        articlesDto = articlesDto.Where(a => a.Author.UserName.Contains(searchWord));
                         break;
                     case SearchPatternsConstats.TopicTitle:
-                        articles = articles.Where(a => a.Title.Contains(searchWord));
+                        articlesDto = articlesDto.Where(a => a.Title.Contains(searchWord));
                         break;
                     default:
-                        articles = articles.Where(a => a.Content.Contains(searchWord));
+                        articlesDto = articlesDto.Where(a => a.Content.Contains(searchWord));
                         break;
                 }
             }
+
+            articles = articlesDto.ToList().AsQueryable().Select(article => mapper.Map<Models.Topic>(article));
 
             if (OrderBy != null)
             {
                 switch (this.SortDirection)
                 {
                     case SortDirection.Ascending:
-                        articles = articles.OrderBy(OrderBy);
-                        break;
-                    case SortDirection.Descending:
-                        articles = articles.OrderBy(OrderBy + " Descending");
+                        articles = Order(articles, OrderBy);
                         break;
                     default:
-                        articles = articles.OrderBy(OrderBy + " Descending");
+                        articles = OrderByDescending(articles, OrderBy);
                         break;
                 }
             }
             else
             {
-                articles.OrderBy("CreatedOn Descending");
+                articlesDto.OrderByDescending(c => c.CreatedOn);
+            }
+
+            return articles;
+        }
+
+        private IQueryable<Server.Models.Topic> Order(IQueryable<Server.Models.Topic> articles, string orderBy)
+        {
+            if (orderBy == "CreatedOn")
+            {
+                articles = articles.OrderBy(a => a.CreatedOn).AsQueryable();
+
+            }
+            else if (orderBy == "Title")
+            {
+                articles = articles.OrderBy(a => a.Title).AsQueryable();
+
+            }
+            else if (orderBy == "Category")
+            {
+                articles = articles.OrderBy(a => a.CategoryType).AsQueryable();
+
+            }
+
+            return articles;
+        }
+
+        private IQueryable<Server.Models.Topic> OrderByDescending(IQueryable<Server.Models.Topic> articles, string orderBy)
+        {
+            if (orderBy == "CreatedOn")
+            {
+                articles = articles.OrderByDescending(a => a.CreatedOn).AsQueryable();
+
+            }
+            else if (orderBy == "Title")
+            {
+                articles = articles.OrderByDescending(a => a.Title).AsQueryable();
+
+            }
+            else if (orderBy == "Category")
+            {
+                articles = articles.OrderByDescending(a => a.CategoryType).AsQueryable();
+
             }
 
             return articles;
@@ -145,22 +184,19 @@ namespace Server
         {
             var item = new Server.Models.Topic();
             item.CreatedOn = DateTime.Now;
-            item.UserId = User.Identity.GetUserId();
-
+            item.UserID = User.Identity.GetUserId();
+            var mapper = MapperFactory.GetMapper();
             TryUpdateModel(item);
             if (ModelState.IsValid)
             {
-                this.dbContext.Topics.Add(item);
+                var dtoItem = mapper.Map<DAL.Models.Topic>(item);
+                this.dbContext.Topics.Add(dtoItem);
                 this.dbContext.SaveChanges();
             }
         }
 
         public void ListViewTopics_Delete(object sender,ListViewDeleteEventArgs e)
         {
-            if (Cache["articles"] == null)
-            {
-                Cache.Remove("articles");
-            }
             ListViewItem item = this.ListViewTopics.Items[e.ItemIndex];
             int id = Convert.ToInt32((item.FindControl("IDValue") as HiddenField).Value);
             var topic = this.dbContext.Topics.Find(id);
@@ -178,7 +214,7 @@ namespace Server
                     this.dbContext.Comments.Remove(c);
                 }
 
-                foreach(var l in likes)
+                foreach (var l in likes)
                 {
                     this.dbContext.Likes.Remove(l);
                 }
@@ -192,7 +228,8 @@ namespace Server
         }
         public void ListViewTopics_UpdateItem(int id)
         {
-            Server.Models.Topic item = this.dbContext.Topics.Find(id);
+            var mapper = MapperFactory.GetMapper();
+            Server.Models.Topic item = mapper.Map<Models.Topic>(this.dbContext.Topics.Find(id));
             if (item == null)
             {
                 // The item wasn't found
@@ -201,10 +238,16 @@ namespace Server
             }
 
             TryUpdateModel(item);
-            if (ModelState.IsValid)
+           if (ModelState.IsValid)
             {
                 this.dbContext.SaveChanges();
             }
+
+        }
+
+        public void SortButton_Click_Title()
+        {
+
         }
     }
 }

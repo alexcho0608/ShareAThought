@@ -9,6 +9,8 @@
     using Server;
     using System.Web.Security;
     using Microsoft.AspNet.Identity;
+    using Server.Mapper;
+    using ServerModel = Server.Models;
     public partial class AdminPanel : Server.BasePage
     {
        protected bool isAdmin;
@@ -21,8 +23,9 @@
                 isAdmin = false;
                 return;
             }
-
-            var user = this.dbContext.Users.First(u => u.UserName == username);
+            var mapper = MapperFactory.GetMapper();
+            var dtoUser = this.dbContext.Users.First(u => u.UserName == username);
+            var user = mapper.Map<ServerModel.User>(dtoUser);
             if (user.Role == Models.Role.Admin)
             {
                 isAdmin = true;
@@ -70,7 +73,7 @@
                 this.ListUsersControl.DataBind();
                 return;
             }
-            user.Role = Models.Role.Admin;
+            user.Role = DAL.Models.Role.Admin;
             this.dbContext.SaveChanges();
         }
 

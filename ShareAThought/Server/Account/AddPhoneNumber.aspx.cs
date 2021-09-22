@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using System.Threading.Tasks;
 using Server.Models;
+using DAL.Config;
 
 namespace Server.Account
 {

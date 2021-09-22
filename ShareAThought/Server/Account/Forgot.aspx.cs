@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web;
 using System.Web.UI;
+using DAL.Config;
+using DAL.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Owin;

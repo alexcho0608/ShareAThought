@@ -11,6 +11,9 @@ using Owin;
 using Server.Models;
 using System.IO;
 using Server.Common;
+using DAL.Models;
+using Server.Mapper;
+using DAL.Config;
 
 namespace Server.Account
 {
@@ -35,7 +38,7 @@ namespace Server.Account
 
         public int LoginsCount { get; set; }
 
-        protected User FoundUser { get; set; }
+        protected Models.User FoundUser { get; set; }
 
         private ForumDbContext db;
 
@@ -43,7 +46,9 @@ namespace Server.Account
         {
             db = new ForumDbContext();
             var id = Context.User.Identity.GetUserId();
-            FoundUser = db.Users.Find(id);
+            var mapper = MapperFactory.GetMapper();
+            var dtoUser = db.Users.Find(id);
+            FoundUser = mapper.Map<Models.User>(dtoUser);
         }
 
         protected void Page_Load()
@@ -106,6 +111,10 @@ namespace Server.Account
                 filename = ServerPathConstants.CommonImageName + filename.Split('.').LastOrDefault();
                 string path = Server.MapPath("~" + ServerPathConstants.ImageDirectory) + FoundUser.UserName + "/";
                 DirectoryInfo dInfo = new DirectoryInfo(path);
+                if (!dInfo.Exists)
+                {
+                    dInfo.Create();
+                }
                 foreach(FileInfo f in dInfo.GetFiles())
                 {
                     f.Delete();

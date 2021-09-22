@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using DAL.Config;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Owin;

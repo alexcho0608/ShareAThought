@@ -15,10 +15,12 @@
     <div class="jumbotron text-center content" style="line-height:80px">
         <asp:HyperLink runat="server" NavigateUrl="/Topics" Width="800" Text="Topics"></asp:HyperLink>
         <br />
+        <%if (Context.User.Identity.GetUserId() == null)
+            { %>
         <asp:HyperLink runat="server" NavigateUrl="Account/Register" Width="800" Text="Register"></asp:HyperLink>
         <br />
         <asp:HyperLink runat="server" NavigateUrl="Account/Login" Width="800" Text="Login"></asp:HyperLink>
-
+        <%}; %>
     </div>
 
 </asp:Content>
